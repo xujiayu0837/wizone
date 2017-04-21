@@ -24,8 +24,9 @@ object PeopleStatistic {
   val locMacMap = mutable.Map("1" -> ("14E4E6E16E7A", "14E4E6E1867A"), "2" -> ("14E4E6E17A34", "14E4E6E172EA"), "3" -> ("388345A236BE", "5C63BFD90AE2"), "4" -> ("14E4E6E17648", "14E4E6E176C8"), "5" -> ("14E4E6E186A4", "EC172FE3B340"), "6" -> ("14E4E6E17908", "14E4E6E179F2"), "7" -> ("14E4E6E17950", "14E4E6E18658"), "8" -> ("14E4E6E1790A", "14E4E6E173FE"), "9" -> ("085700412D4E", "085700411A86"), "10" -> ("0C8268F15CB2", "0C8268F17FB8"), "19" -> ("0C8268C7E138", "0C8268EE3868"), "11" -> ("0C8268C804F8", ""), "12" -> ("0C8268EE3878", "0C8268EE7164"), "13" -> ("0C8268C7D518", "0C8268F17F60"), "14" -> ("0C8268EE3F32", "0857004127E2"), "15" -> ("0C8268F933A2", "0C8268F1648E"), "16" -> ("0C8268F90E64", "0C8268C7D504", "14E6E4E1C510", "0C8268C7DD6C"), "17" -> ("0C8268EE38EE", "0C8268F93B0A"), "18" -> ("0C8268F15C64", "0C8268F9314E"))
   // 数据的路径
   val DATAPATH = "hdfs://10.103.24.161:9000/scandata"
-//  val DESTPATH = "/tmp/idea_print/spark_1_2/170418_test_0"
-  val DESTPATH = "tmp/realtime_statistic"
+  // 测试
+  val DESTPATH = "/tmp/idea_print/spark_1_2/170421_test_0"
+//  val DESTPATH = "tmp/realtime_statistic"
 
   def getDataDs(spark: SparkSession): Dataset[data] = {
     import spark.implicits._
@@ -78,7 +79,7 @@ object PeopleStatistic {
 //    detectDs.show(2000, truncate = false)
     val visitRecordDs = detectDs.withColumnRenamed("ts", "startTime").withColumn("endTime", lit(null))
 
-//    println("*"*50 + "initial run: " + "*"*50)
+    println("*"*50 + "initial run: " + "*"*50)
     visitRecordDs.rdd.saveAsTextFile(DESTPATH)
 
     return detectDs
@@ -91,7 +92,7 @@ object PeopleStatistic {
     */
   def refreshDetectDs(spark: SparkSession): DataFrame = {
     import spark.implicits._
-//    println("*"*50 + "timer run: " + "*"*50)
+    println("*"*50 + "timer run: " + "*"*50)
     val dataDs = getDataDs(spark)
     dataDs.persist()
     return dataDs.filter($"ts"<=new Timestamp(System.currentTimeMillis())).filter($"ts">new Timestamp(System.currentTimeMillis()-5*60*1000L)).groupBy("userMacAddr", "groupid").agg(first("ts").as("ts")).orderBy("ts")
@@ -176,7 +177,7 @@ object PeopleStatistic {
 //        println("arr1: " + arr(1))
         arr(1) == i+""
       }).count()
-//      println("groupid: " + i + ", cnt: " + cnt)
+      println("groupid: " + i + ", cnt: " + cnt)
       MyUtils.insertTable(args(0), args(1), i, cnt)
     }
   }
@@ -186,10 +187,10 @@ object PeopleStatistic {
     * @param updateRdd 到访记录表
     */
   def saveVisitRecord(updateRdd: RDD[String]): Unit = {
-//    println("*"*50 + "dirdel run: " + "*"*50)
+    println("*"*50 + "dirdel run: " + "*"*50)
     MyUtils.dirDel(new File(DESTPATH))
 
-//    println("*"*50 + "dirsave run: " + "*"*50)
+    println("*"*50 + "dirsave run: " + "*"*50)
 //    println("updateRdd: " + updateRdd.collect().toBuffer)
 
     updateRdd.saveAsTextFile(DESTPATH)
@@ -214,8 +215,8 @@ object PeopleStatistic {
 
   def main(args: Array[String]): Unit = {
     // 测试
-//    val spark = SparkSession.builder().config(new SparkConf()).appName("PeopleStatistic").master("local[*]").getOrCreate()
-    val spark = SparkSession.builder().config(new SparkConf()).appName("PeopleStatistic").getOrCreate()
+    val spark = SparkSession.builder().config(new SparkConf()).appName("PeopleStatistic").master("local[*]").getOrCreate()
+//    val spark = SparkSession.builder().config(new SparkConf()).appName("PeopleStatistic").getOrCreate()
     Logger.getRootLogger.setLevel(Level.WARN)
     try {
       val detectDs = init(spark)
@@ -223,8 +224,8 @@ object PeopleStatistic {
       val task = new MyTimerTask(detectDs, args, spark)
       val t = new Timer()
       // 测试
-//      t.schedule(task, 0L, 30 * 1000L)
-      t.schedule(task, 0L, 5 * 60 * 1000L)
+      t.schedule(task, 0L, 30 * 1000L)
+//      t.schedule(task, 0L, 5 * 60 * 1000L)
     }
     catch {
       case e: Exception => e.printStackTrace()
