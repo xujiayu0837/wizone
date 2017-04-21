@@ -193,7 +193,6 @@ object PeopleStatistic {
 //    println("updateRdd: " + updateRdd.collect().toBuffer)
 
     updateRdd.saveAsTextFile(DESTPATH)
-    //      println("*"*50+"compute complete"+"*"*50)
   }
 
   /**
@@ -215,8 +214,8 @@ object PeopleStatistic {
 
   def main(args: Array[String]): Unit = {
     // 测试
-    val spark = SparkSession.builder().config(new SparkConf()).appName("PeopleStatistic").master("local[*]").getOrCreate()
-//    val spark = SparkSession.builder().config(new SparkConf()).appName("PeopleStatistic").getOrCreate()
+//    val spark = SparkSession.builder().config(new SparkConf()).appName("PeopleStatistic").master("local[*]").getOrCreate()
+    val spark = SparkSession.builder().config(new SparkConf()).appName("PeopleStatistic").getOrCreate()
     Logger.getRootLogger.setLevel(Level.WARN)
     try {
       val detectDs = init(spark)
