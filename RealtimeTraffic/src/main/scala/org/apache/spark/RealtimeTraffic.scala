@@ -92,7 +92,8 @@ object RealtimeTraffic {
       val pstmt = conn.prepareStatement(sql)
       pstmt.setInt(1, groupid)
       pstmt.setLong(2, count)
-      pstmt.setLong(3, getgelin(getToday()))
+//      pstmt.setLong(3, getgelin(getToday()))
+      pstmt.setLong(3, System.currentTimeMillis().toString.substring(0, 10).toInt)
       pstmt.execute()
     }
     catch {
@@ -128,8 +129,8 @@ object RealtimeTraffic {
           val content = tup._2
           val apMacAddr = file.getPath.toString.split('/')(4)
           val locStr = locMacMap.find(_._2.toString.contains(apMacAddr)).getOrElse(("", ()))._1
-          //        content.toString+"|"+locStr
-          content.toString + "|" + apMacAddr
+          content.toString+"|"+locStr
+//          content.toString + "|" + apMacAddr
         })
       })
       val dataRdd = hadoopRdd.filter(_.split("[|]").length == 4).filter(line => {
@@ -161,7 +162,7 @@ object RealtimeTraffic {
         val cnt = resDs.select(last("count")).first().getLong(0)
         insertTable(args(0), args(1), groupid, cnt)
         // 测试
-        println("res: " + cnt)
+//        println("res: " + cnt)
       }
       catch {
         case e: Exception => e.printStackTrace()
@@ -180,7 +181,7 @@ object RealtimeTraffic {
   def getToday(): String = {
     val cal = Calendar.getInstance()
     val sdf = new SimpleDateFormat("yyyy-MM-dd")
-    sdf.format(cal.getTime)
+    return sdf.format(cal.getTime)
   }
 
   /**
@@ -198,14 +199,14 @@ object RealtimeTraffic {
     catch {
       case e: Exception => e.printStackTrace()
     }
-    monTime
+    return monTime
   }
 
   def main(args: Array[String]): Unit = {
     // 获取配置文件，并初始化spark
     // 测试
-    val spark = SparkSession.builder().config(new SparkConf()).appName("RealtimeTraffic").master("local[*]").getOrCreate()
-//    val spark = SparkSession.builder().config(new SparkConf()).appName("RealtimeTraffic").getOrCreate()
+//    val spark = SparkSession.builder().config(new SparkConf()).appName("RealtimeTraffic").master("local[*]").getOrCreate()
+    val spark = SparkSession.builder().config(new SparkConf()).appName("RealtimeTraffic").getOrCreate()
     Logger.getRootLogger.setLevel(Level.WARN)
     while (true) {
       try {

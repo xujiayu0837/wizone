@@ -199,7 +199,7 @@ object PeopleStatistic {
     *
     *
     * @param detectDs 探测表
-    * @param args 系统参数
+    * @param args mysql用户名以及密码
     * @param spark spark环境
     */
   class MyTimerTask(var detectDs: DataFrame, args: Array[String], spark: SparkSession) extends TimerTask {

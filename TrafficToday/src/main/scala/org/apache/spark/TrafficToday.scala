@@ -93,7 +93,8 @@ object TrafficToday {
       val pstmt = conn.prepareStatement(sql)
       pstmt.setInt(1, groupid)
       pstmt.setLong(2, count)
-      pstmt.setLong(3, getgelin(getToday()))
+//      pstmt.setLong(3, getgelin(getToday()))
+      pstmt.setLong(3, System.currentTimeMillis().toString.substring(0, 10).toInt)
       pstmt.execute()
     }
     catch {
@@ -130,8 +131,8 @@ object TrafficToday {
           val content = tup._2
           val apMacAddr = file.getPath.toString.split('/')(4)
           val locStr = locMacMap.find(_._2.toString.contains(apMacAddr)).getOrElse(("", ()))._1
-          //        content.toString+"|"+locStr
-          content.toString + "|" + apMacAddr
+          content.toString+"|"+locStr
+//          content.toString + "|" + apMacAddr
         })
       })
       val dataRdd = hadoopRdd.filter(_.split("[|]").length == 4).filter(line => {
@@ -180,7 +181,7 @@ object TrafficToday {
   def getToday(): String = {
     val cal = Calendar.getInstance()
     val sdf = new SimpleDateFormat("yyyy-MM-dd")
-    sdf.format(cal.getTime)
+    return sdf.format(cal.getTime)
   }
 
   /**
@@ -198,7 +199,7 @@ object TrafficToday {
     catch {
       case e: Exception => e.printStackTrace()
     }
-    monTime
+    return monTime
   }
   def main(args: Array[String]): Unit = {
     // 获取配置文件，并初始化spark
