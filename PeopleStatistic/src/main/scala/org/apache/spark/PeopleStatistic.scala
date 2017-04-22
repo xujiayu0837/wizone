@@ -25,12 +25,14 @@ object PeopleStatistic {
   // 数据的路径
   val DATAPATH = "hdfs://10.103.24.161:9000/scandata"
   // 测试
-  val DESTPATH = "/tmp/idea_print/spark_1_2/170421_test_0"
+  val DESTPATH = "/tmp/idea_print/spark_1_2/170422_test_"
 //  val DESTPATH = "tmp/realtime_statistic"
 
-  def getDataDs(spark: SparkSession): Dataset[data] = {
+  def getDataDs(groupid: Int, spark: SparkSession): Dataset[data] = {
     import spark.implicits._
-    val multiPaths = MyUtils.readData(DATAPATH, 1, "")
+    val multiPaths = MyUtils.readData(DATAPATH, 1, groupid+"")
+    // 测试
+//    val multiPaths = "hdfs://10.103.24.161:9000/scandata/*/20170422"
     val fc = classOf[TextInputFormat]
     val kc = classOf[LongWritable]
     val vc = classOf[Text]
@@ -70,9 +72,9 @@ object PeopleStatistic {
     * @param spark spark环境
     * @return 探测表
     */
-  def init(spark: SparkSession): DataFrame = {
+  def init(groupid: Int, spark: SparkSession): DataFrame = {
     import spark.implicits._
-    val dataDs = getDataDs(spark)
+    val dataDs = getDataDs(groupid, spark)
 
     val sdf = new SimpleDateFormat("yyyy-MM-dd")
     val detectDs = dataDs.filter($"ts" > new Timestamp(sdf.parse(MyUtils.getToday()).getTime)).filter($"ts" < new Timestamp(System.currentTimeMillis())).groupBy("userMacAddr", "groupid").agg(first("ts").as("ts")).orderBy("ts")
@@ -80,7 +82,7 @@ object PeopleStatistic {
     val visitRecordDs = detectDs.withColumnRenamed("ts", "startTime").withColumn("endTime", lit(null))
 
     println("*"*50 + "initial run: " + "*"*50)
-    visitRecordDs.rdd.saveAsTextFile(DESTPATH)
+    visitRecordDs.rdd.saveAsTextFile(DESTPATH+groupid+"")
 
     return detectDs
   }
@@ -90,11 +92,11 @@ object PeopleStatistic {
     * @param spark spark环境
     * @return 刷新后的探测表
     */
-  def refreshDetectDs(spark: SparkSession): DataFrame = {
+  def refreshDetectDs(groupid: Int, spark: SparkSession): DataFrame = {
     import spark.implicits._
     println("*"*50 + "timer run: " + "*"*50)
-    val dataDs = getDataDs(spark)
-    dataDs.persist()
+    val dataDs = getDataDs(groupid, spark)
+//    dataDs.persist()
     return dataDs.filter($"ts"<=new Timestamp(System.currentTimeMillis())).filter($"ts">new Timestamp(System.currentTimeMillis()-5*60*1000L)).groupBy("userMacAddr", "groupid").agg(first("ts").as("ts")).orderBy("ts")
 
 //    println("detectDs:")
@@ -107,9 +109,9 @@ object PeopleStatistic {
     * @param spark spark环境
     * @return 更新的到访记录表
     */
-  def updateVisitRecord(detectDs: DataFrame, spark: SparkSession): RDD[String] = {
+  def updateVisitRecord(groupid: Int, detectDs: DataFrame, spark: SparkSession): RDD[String] = {
     import spark.implicits._
-    val visitRecordRdd = spark.sparkContext.textFile(DESTPATH).cache()
+    val visitRecordRdd = spark.sparkContext.textFile(DESTPATH+groupid+"").cache()
     val visitArr = MyUtils.rdd2arr(visitRecordRdd)
 
     val detectDf = detectDs.select("userMacAddr")
@@ -159,41 +161,54 @@ object PeopleStatistic {
     return updateRdd
   }
 
-  /**
-    *
-    * @param updateRdd 到访记录表
-    * @param detectDs 探测表
-    * @return 当前人数
-    */
-  def getResult(updateRdd: RDD[String], detectDs: DataFrame, args: Array[String]): Unit = {
+//  /**
+//    *
+//    * @param updateRdd 到访记录表
+//    * @param detectDs 探测表
+//    * @return 当前人数
+//    */
+//  def getResult(updateRdd: RDD[String], detectDs: DataFrame, args: Array[String]): Unit = {
+//    Thread.sleep(5*1000L)
+//    for (i <- (1 until(20))) {
+//      val cnt = updateRdd.filter(line => {
+//        val arr = MyUtils.stripChars(MyUtils.stripChars(line, "["), "]").split(",")
+////        println("arr3: " + arr(3))
+//        arr(3) == "null"
+//      }).filter(line=>{
+//        val arr = MyUtils.stripChars(MyUtils.stripChars(line, "["), "]").split(",")
+////        println("arr1: " + arr(1))
+//        arr(1) == i+""
+//      }).count()
+//      println("groupid: " + i + ", cnt: " + cnt)
+//      // 测试
+////      MyUtils.insertTable(args(0), args(1), i, cnt)
+//    }
+//  }
+
+  def getResult(groupid: Int, updateRdd: RDD[String], detectDs: DataFrame, args: Array[String]): Unit = {
     Thread.sleep(5*1000L)
-    for (i <- (1 until(20))) {
-      val cnt = updateRdd.filter(line => {
-        val arr = MyUtils.stripChars(MyUtils.stripChars(line, "["), "]").split(",")
-//        println("arr3: " + arr(3))
-        arr(3) == "null"
-      }).filter(line=>{
-        val arr = MyUtils.stripChars(MyUtils.stripChars(line, "["), "]").split(",")
-//        println("arr1: " + arr(1))
-        arr(1) == i+""
-      }).count()
-      println("groupid: " + i + ", cnt: " + cnt)
-      MyUtils.insertTable(args(0), args(1), i, cnt)
-    }
+    val cnt = updateRdd.filter(line=>{
+      val arr = MyUtils.stripChars(MyUtils.stripChars(line, "["), "]").split(",")
+      println("arr3: " + arr(3))
+      arr(3) == "null"
+    }).count()
+    println("groupid: " + groupid + ", cnt: " + cnt)
+    // 测试
+    MyUtils.insertTable(args(0), args(1), groupid, cnt)
   }
 
   /**
     *
     * @param updateRdd 到访记录表
     */
-  def saveVisitRecord(updateRdd: RDD[String]): Unit = {
+  def saveVisitRecord(groupid: Int, updateRdd: RDD[String]): Unit = {
     println("*"*50 + "dirdel run: " + "*"*50)
-    MyUtils.dirDel(new File(DESTPATH))
+    MyUtils.dirDel(new File(DESTPATH+groupid+""))
 
     println("*"*50 + "dirsave run: " + "*"*50)
 //    println("updateRdd: " + updateRdd.collect().toBuffer)
 
-    updateRdd.saveAsTextFile(DESTPATH)
+    updateRdd.saveAsTextFile(DESTPATH+groupid+"")
   }
 
   /**
@@ -203,13 +218,13 @@ object PeopleStatistic {
     * @param args mysql用户名以及密码
     * @param spark spark环境
     */
-  class MyTimerTask(var detectDs: DataFrame, args: Array[String], spark: SparkSession) extends TimerTask {
+  class MyTimerTask(groupid: Int, var detectDs: DataFrame, args: Array[String], spark: SparkSession) extends TimerTask {
     val memberSess = spark
     override def run() = {
-      detectDs = refreshDetectDs(memberSess)
-      val updateRdd = updateVisitRecord(detectDs, memberSess)
-      getResult(updateRdd, detectDs, args)
-      saveVisitRecord(updateRdd)
+      detectDs = refreshDetectDs(groupid, memberSess)
+      val updateRdd = updateVisitRecord(groupid, detectDs, memberSess)
+      getResult(groupid, updateRdd, detectDs, args)
+      saveVisitRecord(groupid, updateRdd)
     }
   }
 
@@ -219,13 +234,15 @@ object PeopleStatistic {
 //    val spark = SparkSession.builder().config(new SparkConf()).appName("PeopleStatistic").getOrCreate()
     Logger.getRootLogger.setLevel(Level.WARN)
     try {
-      val detectDs = init(spark)
+      for (i <- (1 until(20))) {
+        val detectDs = init(i, spark)
 
-      val task = new MyTimerTask(detectDs, args, spark)
-      val t = new Timer()
-      // 测试
-      t.schedule(task, 0L, 30 * 1000L)
-//      t.schedule(task, 0L, 5 * 60 * 1000L)
+        val task = new MyTimerTask(i, detectDs, args, spark)
+        val t = new Timer()
+        // 测试
+        t.schedule(task, 0L, 30 * 1000L)
+        //      t.schedule(task, 0L, 5 * 60 * 1000L)
+      }
     }
     catch {
       case e: Exception => e.printStackTrace()
