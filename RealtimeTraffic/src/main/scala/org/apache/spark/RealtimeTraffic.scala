@@ -217,6 +217,7 @@ object RealtimeTraffic {
       catch {
         case e: Exception => e.printStackTrace()
       }
+      Thread.sleep(1000L)
     }
     spark.sparkContext.stop()
   }

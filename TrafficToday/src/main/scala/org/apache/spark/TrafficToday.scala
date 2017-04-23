@@ -162,6 +162,7 @@ object TrafficToday {
         // 获取计算结果
         val cnt = resDs.select(last("count")).toDF().first().getLong(0)
         insertTable(args(0), args(1), groupid, cnt)
+        // 测试
 //        println("res: " + cnt)
       }
       catch {
@@ -216,6 +217,7 @@ object TrafficToday {
       catch {
         case e: Exception => e.printStackTrace()
       }
+      Thread.sleep(1000L)
     }
 
     spark.sparkContext.stop()
