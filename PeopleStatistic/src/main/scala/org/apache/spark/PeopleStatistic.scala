@@ -26,7 +26,7 @@ object PeopleStatistic {
   val DATAPATH = "hdfs://10.103.24.161:9000/scandata"
   // 测试
   val DESTPATH = "/tmp/idea_print/spark_1_2/170422_test_"
-//  val DESTPATH = "tmp/realtime_statistic"
+//  val DESTPATH = "tmp/realtime_statistic/groupid_"
 
   def getDataDs(groupid: Int, spark: SparkSession): Dataset[data] = {
     import spark.implicits._
@@ -77,7 +77,7 @@ object PeopleStatistic {
     val dataDs = getDataDs(groupid, spark)
 
     val sdf = new SimpleDateFormat("yyyy-MM-dd")
-    val detectDs = dataDs.filter($"ts" > new Timestamp(sdf.parse(MyUtils.getToday()).getTime)).filter($"ts" < new Timestamp(System.currentTimeMillis())).groupBy("userMacAddr", "groupid").agg(first("ts").as("ts")).orderBy("ts")
+    val detectDs = dataDs.filter($"ts"<=new Timestamp(System.currentTimeMillis())).filter($"ts">new Timestamp(System.currentTimeMillis()-5*60*1000L)).groupBy("userMacAddr", "groupid").agg(first("ts").as("ts")).orderBy("ts")
 //    detectDs.show(2000, truncate = false)
     val visitRecordDs = detectDs.withColumnRenamed("ts", "startTime").withColumn("endTime", lit(null))
 
@@ -189,7 +189,7 @@ object PeopleStatistic {
     Thread.sleep(5*1000L)
     val cnt = updateRdd.filter(line=>{
       val arr = MyUtils.stripChars(MyUtils.stripChars(line, "["), "]").split(",")
-      println("arr3: " + arr(3))
+//      println("arr3: " + arr(3))
       arr(3) == "null"
     }).count()
     println("groupid: " + groupid + ", cnt: " + cnt)
@@ -241,7 +241,7 @@ object PeopleStatistic {
         val t = new Timer()
         // 测试
         t.schedule(task, 0L, 30 * 1000L)
-        //      t.schedule(task, 0L, 5 * 60 * 1000L)
+//        t.schedule(task, 0L, 5 * 60 * 1000L)
       }
     }
     catch {
