@@ -22,7 +22,7 @@ import scala.collection.mutable.ArrayBuffer
 object RealtimeTraffic {
   val locMacMap = mutable.Map("1" -> ("14E4E6E16E7A", "14E4E6E1867A"), "2" -> ("14E4E6E17A34", "14E4E6E172EA"), "3" -> ("388345A236BE", "5C63BFD90AE2"), "4" -> ("14E4E6E17648", "14E4E6E176C8"), "5" -> ("14E4E6E186A4", "EC172FE3B340"), "6" -> ("14E4E6E17908", "14E4E6E179F2"), "7" -> ("14E4E6E17950", "14E4E6E18658"), "8" -> ("14E4E6E1790A", "14E4E6E173FE"), "9" -> ("085700412D4E", "085700411A86"), "10" -> ("0C8268F15CB2", "0C8268F17FB8"), "19" -> ("0C8268C7E138", "0C8268EE3868"), "11" -> ("0C8268C804F8", ""), "12" -> ("0C8268EE3878", "0C8268EE7164"), "13" -> ("0C8268C7D518", "0C8268F17F60"), "14" -> ("0C8268EE3F32", "0857004127E2"), "15" -> ("0C8268F933A2", "0C8268F1648E"), "16" -> ("0C8268F90E64", "0C8268C7D504", "14E6E4E1C510", "0C8268C7DD6C"), "17" -> ("0C8268EE38EE", "0C8268F93B0A"), "18" -> ("0C8268F15C64", "0C8268F9314E"))
   // 数据的路径
-  val DATAPATH = "hdfs://10.103.24.161:9000/scandata"
+  val DATAPATH = new StringBuilder("hdfs://10.103.24.161:9000/scandata")
   val driver = "com.mysql.jdbc.Driver"
   val url = "jdbc:mysql://localhost/wibupt"
 
@@ -33,11 +33,9 @@ object RealtimeTraffic {
     * @param locStr   监测场所
     * @return 路径字符串
     */
-  def readData(dataPath: String, days: Int = 1, locStr: String = ""): String = {
-    // HDFS文件名
-    var path_1 = ""
+  def readData(dataPath: StringBuilder, days: Int = 1, locStr: String = ""): String = {
     // 路径字符串
-    var multiPaths = ""
+    val multiPaths = new StringBuilder
     // 存储相应日期的文件路径
     val arr_0 = new ArrayBuffer[String]()
     // 存储日期字符串
@@ -45,14 +43,14 @@ object RealtimeTraffic {
     val cal = Calendar.getInstance()
     val sdf = new SimpleDateFormat("yyyyMMdd")
     // locStr为空时,获取所有AP的数据
-    if (locStr == "") {
+    if (locStr.equals("")) {
       for (i <- (0 until (days))) {
-        path_1 = if (dataPath.endsWith("/")) dataPath + "*/" else dataPath + "/*/"
-        path_1 += sdf.format(cal.getTime)
-        arr_0 += path_1
+        val tmpPath = new StringBuilder
+        tmpPath.append(dataPath).append("*/").append(sdf.format(cal.getTime))
+        arr_0 += tmpPath.toString
       }
-      multiPaths = arr_0.mkString(",")
-      return multiPaths
+      multiPaths.append(arr_0.mkString(","))
+      return multiPaths.toString()
     }
     // 获取locStr对应AP的数据
     else {
@@ -64,12 +62,12 @@ object RealtimeTraffic {
           arr_2 += sdf.format(cal.getTime)
         }
         for (item <- arr_1; i <- (0 until (arr_2.length))) {
-          if (!dataPath.endsWith("/")) path_1 = dataPath + "/"
-          path_1 += item + "/" + arr_2(i)
-          arr_0 += path_1
+          val tmpPath = new StringBuilder
+          tmpPath.append(dataPath).append(item).append("/").append(arr_2(i))
+          arr_0 += tmpPath.toString
         }
-        multiPaths = arr_0.mkString(",")
-        return multiPaths
+        multiPaths.append(arr_0.mkString(","))
+        return multiPaths.toString()
       }
       // 非法locStr返回空字符串
       else return ""

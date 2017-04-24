@@ -25,11 +25,9 @@ object MyUtils {
     * @param locStr   监测场所
     * @return 路径字符串
     */
-  def readData(dataPath: String, days: Int = 1, locStr: String = ""): String = {
-    // HDFS文件名
-    var path_1 = ""
+  def readData(dataPath: StringBuilder, days: Int = 1, locStr: String = ""): String = {
     // 路径字符串
-    var multiPaths = ""
+    val multiPaths = new StringBuilder
     // 存储相应日期的文件路径
     val arr_0 = new ArrayBuffer[String]()
     // 存储日期字符串
@@ -37,14 +35,14 @@ object MyUtils {
     val cal = Calendar.getInstance()
     val sdf = new SimpleDateFormat("yyyyMMdd")
     // locStr为空时,获取所有AP的数据
-    if (locStr == "") {
+    if (locStr.equals("")) {
       for (i <- (0 until (days))) {
-        path_1 = if (dataPath.endsWith("/")) dataPath + "*/" else dataPath + "/*/"
-        path_1 += sdf.format(cal.getTime)
-        arr_0 += path_1
+        val tmpPath = new StringBuilder
+        tmpPath.append(dataPath).append("*/").append(sdf.format(cal.getTime))
+        arr_0 += tmpPath.toString
       }
-      multiPaths = arr_0.mkString(",")
-      return multiPaths
+      multiPaths.append(arr_0.mkString(","))
+      return multiPaths.toString()
     }
     // 获取locStr对应AP的数据
     else {
@@ -56,12 +54,12 @@ object MyUtils {
           arr_2 += sdf.format(cal.getTime)
         }
         for (item <- arr_1; i <- (0 until (arr_2.length))) {
-          if (!dataPath.endsWith("/")) path_1 = dataPath + "/"
-          path_1 += item + "/" + arr_2(i)
-          arr_0 += path_1
+          val tmpPath = new StringBuilder
+          tmpPath.append(dataPath).append(item).append("/").append(arr_2(i))
+          arr_0 += tmpPath.toString
         }
-        multiPaths = arr_0.mkString(",")
-        return multiPaths
+        multiPaths.append(arr_0.mkString(","))
+        return multiPaths.toString()
       }
       // 非法locStr返回空字符串
       else return ""
