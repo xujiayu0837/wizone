@@ -2,19 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f501ed3-c745-45ed-a751-97cdeb1652eb" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../RealtimeTraffic/target/classes.-968628974.timestamp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../TrafficToday/target/classes.-791933460.timestamp" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/MyUtils.scala" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/MyUtils.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/PeopleStatistic.scala" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/PeopleStatistic.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/QA.scala" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/QA.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../RealtimeTraffic/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../RealtimeTraffic/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../RealtimeTraffic/src/main/scala/org/apache/spark/RealtimeTraffic.scala" afterPath="$PROJECT_DIR$/../RealtimeTraffic/src/main/scala/org/apache/spark/RealtimeTraffic.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../RealtimeTraffic/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/../RealtimeTraffic/target/maven-archiver/pom.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../TrafficToday/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../TrafficToday/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../TrafficToday/src/main/scala/org/apache/spark/TrafficToday.scala" afterPath="$PROJECT_DIR$/../TrafficToday/src/main/scala/org/apache/spark/TrafficToday.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../TrafficToday/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/../TrafficToday/target/maven-archiver/pom.properties" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -41,11 +35,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PeopleStatistic.scala" pinned="false" current-in-tab="false">
+      <file leaf-file-name="PeopleStatistic.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/PeopleStatistic.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1230">
-              <caret line="82" column="57" lean-forward="false" selection-start-line="82" selection-start-column="57" selection-end-line="82" selection-end-column="57" />
+            <state relative-caret-position="2700">
+              <caret line="180" column="13" lean-forward="false" selection-start-line="180" selection-start-column="11" selection-end-line="180" selection-end-column="13" />
               <folding>
                 <element signature="e#26#45#0" expanded="true" />
               </folding>
@@ -53,12 +47,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MyUtils.scala" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MyUtils.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/MyUtils.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="33" column="41" lean-forward="true" selection-start-line="33" selection-start-column="41" selection-end-line="33" selection-end-column="41" />
-              <folding />
+            <state relative-caret-position="1365">
+              <caret line="99" column="71" lean-forward="false" selection-start-line="99" selection-start-column="71" selection-end-line="99" selection-end-column="71" />
+              <folding>
+                <element signature="e#26#45#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -68,9 +64,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1455">
               <caret line="97" column="7" lean-forward="false" selection-start-line="97" selection-start-column="7" selection-end-line="97" selection-end-column="7" />
-              <folding>
-                <element signature="e#26#59#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -79,7 +73,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>locstr</find>
       <find>locStr</find>
       <find>\.show</find>
       <find>gettoday</find>
@@ -109,6 +102,7 @@
       <find>locMacMap</find>
       <find>//        for (item &lt;- arr_1; i &lt;- (0 until (arr_2.length))) { //          if (!dataPath.endsWith(&quot;/&quot;)) path_1 = dataPath + &quot;/&quot; //          path_1 += item + &quot;/&quot; + arr_2(i) //          arr_0 += path_1 //        }</find>
       <find>initial</find>
+      <find>10\.103</find>
     </findStrings>
     <replaceStrings>
       <replace>groupid</replace>
@@ -559,11 +553,12 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="709" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32741934" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901135" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -586,7 +581,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901135" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
@@ -655,7 +649,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1785">
           <caret line="127" column="66" lean-forward="true" selection-start-line="127" selection-start-column="66" selection-end-line="127" selection-end-column="66" />
-          <folding />
+          <folding>
+            <element signature="e#26#45#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -681,7 +677,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="18" column="9" lean-forward="false" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
-          <folding />
+          <folding>
+            <element signature="e#26#45#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -707,7 +705,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1920">
           <caret line="128" column="3" lean-forward="false" selection-start-line="128" selection-start-column="3" selection-end-line="128" selection-end-column="3" />
-          <folding />
+          <folding>
+            <element signature="e#26#45#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -733,7 +733,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1815">
           <caret line="128" column="3" lean-forward="false" selection-start-line="128" selection-start-column="3" selection-end-line="128" selection-end-column="3" />
-          <folding />
+          <folding>
+            <element signature="e#26#45#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -759,7 +761,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1815">
           <caret line="128" column="3" lean-forward="true" selection-start-line="128" selection-start-column="3" selection-end-line="128" selection-end-column="3" />
-          <folding />
+          <folding>
+            <element signature="e#26#45#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1050,31 +1054,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/MyUtils.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1365">
+          <caret line="99" column="71" lean-forward="false" selection-start-line="99" selection-start-column="71" selection-end-line="99" selection-end-column="71" />
+          <folding>
+            <element signature="e#26#45#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/QA.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1455">
           <caret line="97" column="7" lean-forward="false" selection-start-line="97" selection-start-column="7" selection-end-line="97" selection-end-column="7" />
-          <folding>
-            <element signature="e#26#59#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/PeopleStatistic.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1230">
-          <caret line="82" column="57" lean-forward="false" selection-start-line="82" selection-start-column="57" selection-end-line="82" selection-end-column="57" />
+        <state relative-caret-position="2700">
+          <caret line="180" column="13" lean-forward="false" selection-start-line="180" selection-start-column="11" selection-end-line="180" selection-end-column="13" />
           <folding>
             <element signature="e#26#45#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/MyUtils.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="33" column="41" lean-forward="true" selection-start-line="33" selection-start-column="41" selection-end-line="33" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>

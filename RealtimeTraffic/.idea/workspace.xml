@@ -2,19 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9d79af3-3be3-4c69-ad2a-9dae5b5abd79" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes.-968628974.timestamp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../TrafficToday/target/classes.-791933460.timestamp" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../PeopleStatistic/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../PeopleStatistic/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../PeopleStatistic/src/main/scala/org/apache/spark/MyUtils.scala" afterPath="$PROJECT_DIR$/../PeopleStatistic/src/main/scala/org/apache/spark/MyUtils.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../PeopleStatistic/src/main/scala/org/apache/spark/PeopleStatistic.scala" afterPath="$PROJECT_DIR$/../PeopleStatistic/src/main/scala/org/apache/spark/PeopleStatistic.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../PeopleStatistic/src/main/scala/org/apache/spark/QA.scala" afterPath="$PROJECT_DIR$/../PeopleStatistic/src/main/scala/org/apache/spark/QA.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../PeopleStatistic/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/../PeopleStatistic/target/maven-archiver/pom.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/org/apache/spark/RealtimeTraffic.scala" afterPath="$PROJECT_DIR$/src/main/scala/org/apache/spark/RealtimeTraffic.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../TrafficToday/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../TrafficToday/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../TrafficToday/src/main/scala/org/apache/spark/TrafficToday.scala" afterPath="$PROJECT_DIR$/../TrafficToday/src/main/scala/org/apache/spark/TrafficToday.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../TrafficToday/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/../TrafficToday/target/maven-archiver/pom.properties" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -49,8 +44,8 @@
       <file leaf-file-name="RealtimeTraffic.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/RealtimeTraffic.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1305">
-              <caret line="24" column="72" lean-forward="false" selection-start-line="24" selection-start-column="72" selection-end-line="24" selection-end-column="72" />
+            <state relative-caret-position="-1055">
+              <caret line="121" column="54" lean-forward="false" selection-start-line="121" selection-start-column="54" selection-end-line="121" selection-end-column="54" />
               <folding>
                 <element signature="e#26#80#0" expanded="true" />
               </folding>
@@ -1033,8 +1028,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/apache/spark/RealtimeTraffic.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1305">
-          <caret line="24" column="72" lean-forward="false" selection-start-line="24" selection-start-column="72" selection-end-line="24" selection-end-column="72" />
+        <state relative-caret-position="-1055">
+          <caret line="121" column="54" lean-forward="false" selection-start-line="121" selection-start-column="54" selection-end-line="121" selection-end-column="54" />
           <folding>
             <element signature="e#26#80#0" expanded="true" />
           </folding>
