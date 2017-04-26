@@ -28,6 +28,12 @@ object PeopleStatistic {
   val DESTPATH = "/tmp/idea_print/spark_1_2/170424_test_"
 //  val DESTPATH = "tmp/realtime_statistic/groupid_"
 
+  /**
+    *
+    * @param groupid 监测场所
+    * @param spark spark环境
+    * @return spark封装原始数据
+    */
   def getDataDs(groupid: Int, spark: SparkSession): Dataset[data] = {
     import spark.implicits._
     val multiPaths = MyUtils.readData(DATAPATH, 1, groupid+"")
@@ -52,6 +58,7 @@ object PeopleStatistic {
       arr(1).toDouble > -90
     }).map(_.split("[|]"))
     val tmpRdd = dataRdd.map(arr => Row(arr(0).trim, arr(1).toDouble, new Timestamp(arr(2).toLong * 1000L), arr(3).trim))
+    // 传入数据类型参数
     val schema = StructType(
       List(
         StructField("userMacAddr", StringType, true),
@@ -67,6 +74,7 @@ object PeopleStatistic {
 
   /**
     *
+    * @param groupid 监测场所
     * @param spark spark环境
     * @return 探测表
     */
@@ -75,11 +83,14 @@ object PeopleStatistic {
     val dataDs = getDataDs(groupid, spark)
 
     val sdf = new SimpleDateFormat("yyyy-MM-dd")
+    // 初始化探测表
     val detectDs = dataDs.filter($"ts"<=new Timestamp(System.currentTimeMillis())).filter($"ts">new Timestamp(System.currentTimeMillis()-5*60*1000L)).groupBy("userMacAddr", "groupid").agg(first("ts").as("ts")).orderBy("ts")
 //    detectDs.show(2000, truncate = false)
+    // 初始化到访记录表
     val visitRecordDs = detectDs.withColumnRenamed("ts", "startTime").withColumn("endTime", lit(null))
 
     println("*"*50 + "initial run: " + "*"*50)
+    // 到访记录表存为临时文件
     visitRecordDs.rdd.saveAsTextFile(DESTPATH+groupid+"")
 
     return detectDs
@@ -87,6 +98,7 @@ object PeopleStatistic {
 
   /**
     *
+    * @param groupid 监测场所
     * @param spark spark环境
     * @return 刷新后的探测表
     */
@@ -95,6 +107,7 @@ object PeopleStatistic {
     println("*"*50 + "timer run: " + "*"*50)
     val dataDs = getDataDs(groupid, spark)
 //    dataDs.persist()
+    // 每5分钟刷新探测表
     return dataDs.filter($"ts"<=new Timestamp(System.currentTimeMillis())).filter($"ts">new Timestamp(System.currentTimeMillis()-5*60*1000L)).groupBy("userMacAddr", "groupid").agg(first("ts").as("ts")).orderBy("ts")
 
 //    println("detectDs:")
@@ -103,6 +116,7 @@ object PeopleStatistic {
 
   /**
     *
+    * @param groupid 监测场所
     * @param detectDs 探测表
     * @param spark spark环境
     * @return 更新的到访记录表
@@ -183,6 +197,13 @@ object PeopleStatistic {
 //    }
 //  }
 
+  /**
+    *
+    * @param groupid 监测场所
+    * @param updateRdd 到访记录表
+    * @param detectDs 探测表
+    * @param args mysql用户名以及密码
+    */
   def getResult(groupid: Int, updateRdd: RDD[String], detectDs: DataFrame, args: Array[String]): Unit = {
     Thread.sleep(5*1000L)
     val cnt = updateRdd.filter(line=>{
@@ -196,6 +217,7 @@ object PeopleStatistic {
 
   /**
     *
+    * @param groupid 监测场所
     * @param updateRdd 到访记录表
     */
   def saveVisitRecord(groupid: Int, updateRdd: RDD[String]): Unit = {
@@ -210,7 +232,7 @@ object PeopleStatistic {
 
   /**
     *
-    *
+    * @param groupid 监测场所
     * @param detectDs 探测表
     * @param args mysql用户名以及密码
     * @param spark spark环境
