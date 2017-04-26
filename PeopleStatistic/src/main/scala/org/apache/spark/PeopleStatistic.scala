@@ -36,7 +36,7 @@ object PeopleStatistic {
     */
   def getDataDs(groupid: Int, spark: SparkSession): Dataset[data] = {
     import spark.implicits._
-    val multiPaths = MyUtils.readData(DATAPATH, 1, groupid+"")
+    val multiPaths = MyUtils.readData(DATAPATH, 1, groupid.toString)
     val fc = classOf[TextInputFormat]
     val kc = classOf[LongWritable]
     val vc = classOf[Text]
@@ -49,8 +49,8 @@ object PeopleStatistic {
         val content = tup._2
         val apMacAddr = file.getPath.toString.split('/')(4)
         val groupid = locMacMap.find(_._2.toString.contains(apMacAddr)).getOrElse(("", ()))._1
-        content.toString+"|"+groupid
-        //        content.toString + "|" + apMacAddr
+        new StringBuilder(content.toString).append("|").append(groupid).toString()
+//        new StringBuilder(content.toString).append("|").append(groupid).toString()
       })
     })
     val dataRdd = hadoopRdd.filter(_.split("[|]").length == 4).filter(line => {

@@ -11,6 +11,32 @@ import scala.collection.mutable.ArrayBuffer
   */
 object QA {
   val locMacMap = mutable.Map("1" -> ("14E4E6E16E7A", ""))
+  val PREFIX = "/tmp/idea_print/spark_1_2/170424_test_"
+
+  def m_0(groupid: Int): Unit = {
+    val visitPath = new StringBuilder
+    visitPath.append(PREFIX).append(groupid)
+    println("m_0"+" "+visitPath)
+  }
+  def m_1(groupid: Int): Unit = {
+    val visitPath = new StringBuilder
+    visitPath.append(PREFIX).append(groupid)
+    println("m_1"+" "+visitPath)
+  }
+  def m_2(groupid: Int): Unit = {
+    val delPath = new StringBuilder
+    val savePath = new StringBuilder
+    delPath.append(PREFIX).append(groupid)
+    savePath.append(PREFIX).append(groupid)
+    println("m_2"+" "+delPath + " " + savePath)
+  }
+  class MyTimerTask(groupid: Int) extends TimerTask {
+    override def run() = {
+      m_0(groupid)
+      m_1(groupid)
+      m_2(groupid)
+    }
+  }
 
   def readData(dataPath: StringBuilder, days: Int = 1, locStr: String = ""): String = {
     // 路径字符串
@@ -73,6 +99,13 @@ object QA {
     println("str_2: " + str_2)
     val str_0 = concatStr("hdfs://10.103.24.161:9000/scandata/")
     println("str_0: " + str_0)
+
+    for (i <- (1 until(20))) {
+      val timer = new Timer()
+      val task_2 = new MyTimerTask(i)
+      timer.schedule(task_2, 0L, 5*1000L)
+    }
+
 //    val timer = new Timer()
 //    val task_0 = new TimerTask {
 //      override def run() = {
