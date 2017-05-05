@@ -18,52 +18,82 @@ object MyUtils {
   val driver = "com.mysql.jdbc.Driver"
   val url = "jdbc:mysql://localhost/wibupt"
 
+//  /**
+//    *
+//    * @param dataPath HDFS数据的路径
+//    * @param days     时间长度。读取最近几天的数据。eg:1
+//    * @param locStr   监测场所
+//    * @return 路径字符串
+//    */
+//  def readData(dataPath: StringBuilder, days: Int = 1, locStr: String = ""): String = {
+//    // 路径字符串
+//    val multiPaths = new StringBuilder
+//    // 存储相应日期的文件路径
+//    val arr_0 = new ArrayBuffer[String]()
+//    // 存储日期字符串
+//    val arr_2 = new ArrayBuffer[String]()
+//    val cal = Calendar.getInstance()
+//    val sdf = new SimpleDateFormat("yyyyMMdd")
+//    // locStr为空时,获取所有AP的数据
+//    if (locStr.equals("")) {
+//      for (i <- (0 until (days))) {
+//        val tmpPath = new StringBuilder
+//        tmpPath.append(dataPath).append("*/").append(sdf.format(cal.getTime))
+//        arr_0 += tmpPath.toString
+//      }
+//      multiPaths.append(arr_0.mkString(","))
+//      return multiPaths.toString()
+//    }
+//    // 获取locStr对应AP的数据
+//    else {
+//      var arr_1 = locMacMap.getOrElse(locStr, ()).toString.split("[^-\\w]+")
+//      // locStr合法,能获取到对应AP
+//      if (!arr_1.isEmpty) {
+//        arr_1 = arr_1.tail
+//        for (i <- (0 until (days))) {
+//          arr_2 += sdf.format(cal.getTime)
+//        }
+//        for (item <- arr_1; i <- (0 until (arr_2.length))) {
+//          val tmpPath = new StringBuilder
+//          tmpPath.append(dataPath).append(item).append("/").append(arr_2(i))
+//          arr_0 += tmpPath.toString
+//        }
+//        multiPaths.append(arr_0.mkString(","))
+//        return multiPaths.toString()
+//      }
+//      // 非法locStr返回空字符串
+//      else return ""
+//    }
+//  }
+
   /**
     *
     * @param dataPath HDFS数据的路径
-    * @param days     时间长度。读取最近几天的数据。eg:1
-    * @param locStr   监测场所
+    * @param locStr 监测场所
     * @return 路径字符串
     */
-  def readData(dataPath: StringBuilder, days: Int = 1, locStr: String = ""): String = {
+  def getPaths(dataPath: StringBuilder, locStr: String = ""): String = {
     // 路径字符串
     val multiPaths = new StringBuilder
     // 存储相应日期的文件路径
     val arr_0 = new ArrayBuffer[String]()
-    // 存储日期字符串
-    val arr_2 = new ArrayBuffer[String]()
     val cal = Calendar.getInstance()
     val sdf = new SimpleDateFormat("yyyyMMdd")
-    // locStr为空时,获取所有AP的数据
-    if (locStr.equals("")) {
-      for (i <- (0 until (days))) {
+    // 获取locStr对应AP的数据
+    var arr_1 = locMacMap.getOrElse(locStr, ()).toString.split("[^-\\w]+")
+    // locStr合法,能获取到对应AP
+    if (!arr_1.isEmpty) {
+      arr_1 = arr_1.tail
+      for (item <- arr_1) {
         val tmpPath = new StringBuilder
-        tmpPath.append(dataPath).append("*/").append(sdf.format(cal.getTime))
+        tmpPath.append(dataPath).append(item).append("/").append(sdf.format(cal.getTime))
         arr_0 += tmpPath.toString
       }
       multiPaths.append(arr_0.mkString(","))
       return multiPaths.toString()
     }
-    // 获取locStr对应AP的数据
-    else {
-      var arr_1 = locMacMap.getOrElse(locStr, ()).toString.split("[^-\\w]+")
-      // locStr合法,能获取到对应AP
-      if (!arr_1.isEmpty) {
-        arr_1 = arr_1.tail
-        for (i <- (0 until (days))) {
-          arr_2 += sdf.format(cal.getTime)
-        }
-        for (item <- arr_1; i <- (0 until (arr_2.length))) {
-          val tmpPath = new StringBuilder
-          tmpPath.append(dataPath).append(item).append("/").append(arr_2(i))
-          arr_0 += tmpPath.toString
-        }
-        multiPaths.append(arr_0.mkString(","))
-        return multiPaths.toString()
-      }
-      // 非法locStr返回空字符串
-      else return ""
-    }
+    // 非法locStr返回空字符串
+    else return ""
   }
 
   /**

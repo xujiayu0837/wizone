@@ -25,8 +25,8 @@ object PeopleStatistic {
   // 数据的路径
   val DATAPATH = new StringBuilder("hdfs://10.103.93.27:9000/scandata/")
   // 测试
-  val DESTPATH = "/tmp/idea_print/spark_1_2/170424_test_"
-//  val DESTPATH = "tmp/realtime_statistic/groupid_"
+//  val DESTPATH = "/tmp/idea_print/spark_1_2/170424_test_"
+  val DESTPATH = "tmp/realtime_statistic/groupid_"
 
   /**
     *
@@ -36,7 +36,10 @@ object PeopleStatistic {
     */
   def getDataDs(groupid: Int, spark: SparkSession): Dataset[data] = {
     import spark.implicits._
-    val multiPaths = MyUtils.readData(DATAPATH, 1, groupid.toString)
+    // 获取路径
+    // 测试
+//    val multiPaths = MyUtils.readData(DATAPATH, 1, groupid.toString)
+    val multiPaths = MyUtils.getPaths(DATAPATH, groupid.toString)
     val fc = classOf[TextInputFormat]
     val kc = classOf[LongWritable]
     val vc = classOf[Text]
@@ -172,30 +175,6 @@ object PeopleStatistic {
     }
     return updateRdd
   }
-
-//  /**
-//    *
-//    * @param updateRdd 到访记录表
-//    * @param detectDs 探测表
-//    * @return 当前人数
-//    */
-//  def getResult(updateRdd: RDD[String], detectDs: DataFrame, args: Array[String]): Unit = {
-//    Thread.sleep(5*1000L)
-//    for (i <- (1 until(20))) {
-//      val cnt = updateRdd.filter(line => {
-//        val arr = MyUtils.stripChars(MyUtils.stripChars(line, "["), "]").split(",")
-////        println("arr3: " + arr(3))
-//        arr(3) == "null"
-//      }).filter(line=>{
-//        val arr = MyUtils.stripChars(MyUtils.stripChars(line, "["), "]").split(",")
-////        println("arr1: " + arr(1))
-//        arr(1) == i+""
-//      }).count()
-//      println("groupid: " + i + ", cnt: " + cnt)
-//      // 测试
-////      MyUtils.insertTable(args(0), args(1), i, cnt)
-//    }
-//  }
 
   /**
     *
