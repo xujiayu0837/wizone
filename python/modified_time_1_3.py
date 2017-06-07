@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import time
 import datetime
@@ -28,11 +29,13 @@ def handle(sub_dir):
 				if filename == today_str:
 					path = os.path.join(sub_dir, today_str)
 			AP = get_AP(sub_dir)
-			print "AP: %s" % AP
+			# print "AP: %s" % AP
 			producer = KafkaProducer(bootstrap_servers=SERVER)
 		except Exception as e:
 			raise e
 		try:
+			if path == '':
+				return
 			f = open(path, "r")
 			history_list = f.readlines()
 			last_pos = f.tell()
@@ -43,7 +46,7 @@ def handle(sub_dir):
 				if init_ts != ts:
 					init_ts = ts
 					with open(path, 'r') as fr:
-						print "last_pos: %s" % last_pos
+						# print "last_pos: %s" % last_pos
 						fr.seek(last_pos)
 						data = fr.readlines()
 						last_pos = fr.tell()
@@ -51,6 +54,9 @@ def handle(sub_dir):
 							data_with_AP = ['|'.join([item.strip(), AP]) for item in data]
 							print "write data: %s to kafka. server: %s, topic: %s" % (data_with_AP, SERVER, TOPIC)
 							write_to_kafka(producer, data_with_AP)
+							time.sleep(1)
+				else:
+					time.sleep(1)
 		except Exception as e:
 			raise e
 	except Exception as e:

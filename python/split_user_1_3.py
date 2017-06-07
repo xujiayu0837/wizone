@@ -9,8 +9,7 @@ OUIPATH = '/Users/xujiayu/Downloads/oui_new.txt'
 
 def get_oui_list():
 	with open(OUIPATH, 'r') as fr:
-		for line in fr:
-			oui_list = [line.split("|")[0] for line in fr]
+		oui_list = [line.split("|")[0] for line in fr]
 	return oui_list
 
 def get_AP(path):

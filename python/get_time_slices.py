@@ -3,8 +3,8 @@ import time
 import statistics
 from multiprocessing.dummy import Pool as Pool
 import pandas as pd
-# from matplotlib import pyplot as plt
-# from basic_plot import get_df_with_index
+from matplotlib import pyplot as plt
+from basic_plot import get_df_with_index
 from get_mean import get_dest_dir
 
 SRCDIR = '/Users/xujiayu/python/mean'
@@ -46,25 +46,33 @@ def handle(item):
 				else:
 					if time_slices_list[-1][0] - time_slices_list[0][0] < 6:
 						print("passerby. user_id: %s, date: %s, time_slices_list: %s" % (user_id, date, time_slices_list))
-					if len(time_slices_list) <= 1:
-						print("1 timeslice. time_slices_list: %s, filename: %s" % (time_slices_list, item))
-					else:
-						rssi_list = [item[1] for item in time_slices_list]
-						stdev = statistics.stdev(rssi_list)
-						print("stdev: %s, filename: %s" % (stdev, item))
-					time_slices_list.append(user_id)
+					# if len(time_slices_list) <= 1:
+					# 	print("1 timeslice. time_slices_list: %s, filename: %s" % (time_slices_list, item))
+					# else:
+					# 	rssi_list = [item[1] for item in time_slices_list]
+					# 	stdev = statistics.stdev(rssi_list)
+					# 	print("stdev: %s, filename: %s" % (stdev, item))
+					# time_slices_list.append(user_id)
 					# fw.write(str(time_slices_list)+'\n')
-					# df = pd.DataFrame(time_slices_list)
-					# df = get_df_with_index(df, df[0])
-					# df_0 = df[df[2] == '14E4E6E186A4']
-					# df_1 = df[df[2] == 'EC172FE3B340']
-					# print("df: %s, df_0: %s, df_1: %s, user_id: %s" % (df, df_0, df_1, user_id))
-					# plt.plot(df_0['rssi'])
-					# plt.plot(df_1['rssi'])
+					df = pd.DataFrame(time_slices_list)
+					df = get_df_with_index(df, df[0])
+					df_0 = df[df[2] == '14E4E6E186A4']
+					df_1 = df[df[2] == 'EC172FE3B340']
+					print("df: %s, df_0: %s, df_1: %s, user_id: %s" % (df, df_0, df_1, user_id))
+					# plt.plot(df_0[1])
+					# plt.plot(df_1[1])
 					# plt.show()
 					time_slices_list[:] = []
 					time_slices_list.append((cur_ts, cur_rssi, cur_AP))
 				prev_ts = cur_ts
+			df = pd.DataFrame(time_slices_list)
+			df = get_df_with_index(df, df[0])
+			df_0 = df[df[2] == '14E4E6E186A4']
+			df_1 = df[df[2] == 'EC172FE3B340']
+			print("df: %s, df_0: %s, df_1: %s, user_id: %s" % (df, df_0, df_1, user_id))
+			# plt.plot(df_0[1])
+			# plt.plot(df_1[1])
+			# plt.show()
 	except Exception as e:
 		raise e
 
