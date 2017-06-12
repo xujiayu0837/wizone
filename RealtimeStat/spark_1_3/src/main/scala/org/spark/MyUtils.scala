@@ -35,7 +35,8 @@ object MyUtils {
 
   case class data(userMacAddr: String, rssi: Double, ts: Timestamp, groupid: String)
   case class dataWithTs(userMacAddr: String, rssi: Double, ts: Long, AP: String)
-  case class dataWithId(_id: Long, userMacAddr: String, rssi: Double, ts: Timestamp, AP: String)
+  case class dataWithId(_id: Long, userMacAddr: String, rssi: Double, ts: Long, AP: String)
+  case class dataWithDt(_id: Long, userMacAddr: String, rssi: Double, ts: Timestamp, AP: String)
   case class Trajectories(ts: Timestamp, AP: String)
 
   def addColGroupid(dataDf: DataFrame): DataFrame = {
