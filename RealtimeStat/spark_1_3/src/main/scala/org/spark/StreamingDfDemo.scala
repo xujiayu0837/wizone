@@ -8,7 +8,7 @@ import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkConf
 import org.apache.spark.ml.feature.StringIndexer
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.{broadcast, lit, mean, round, explode, when}
+import org.apache.spark.sql.functions.{broadcast, lit, mean, round, explode, when, count}
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka.KafkaUtils
 
@@ -18,7 +18,9 @@ import scala.collection.mutable
   * Created by xujiayu on 17/6/6.
   */
 object StreamingDfDemo {
-  val OUIFILENAME = new StringBuilder("/Users/xujiayu/Downloads/oui_new.txt")
+  val THRESHOLD = 1800
+//  val OUIFILENAME = new StringBuilder("/Users/xujiayu/Downloads/oui_new.txt")
+  val OUIFILENAME = new StringBuilder("/home/hadoop/oui_new.txt")
 
   def stateSpecWordCount(key: String, value: Option[Int], state: State[Int]) = {
     val res = state.getOption().getOrElse(0) + value.getOrElse(0)
@@ -56,7 +58,7 @@ object StreamingDfDemo {
     val spark = SparkSession.builder().getOrCreate()
     import spark.implicits._
     ssc.checkpoint("/tmp/checkpoint")
-    val Array(brokers, topics) = args
+    val Array(brokers, topics, mysqlUser, mysqlPasswd) = args
     val topicsSet = topics.split(",").toSet
     val kafkaParams = Map[String, String](
       "metadata.broker.list"->brokers
@@ -67,46 +69,53 @@ object StreamingDfDemo {
 //    val dataStream = lines.map(item=>data(item(0).trim, item(1).toDouble, new Timestamp(item(2).toLong * 1000L), item(3).trim))
     val dataStream = lines.map(item=>MyUtils.dataWithId(item(0).toLong, item(1).trim, item(2).toDouble, item(3).toLong, item(4).trim))
     val prop = new Properties()
-    prop.put("user", "root")
-    prop.put("password", "root")
+    prop.put("user", mysqlUser)
+    prop.put("password", mysqlPasswd)
     val ouiDs = spark.read.option("sep", "|").csv(OUIFILENAME.toString()).map(_.getString(0))
     val broadcastDs = broadcast(ouiDs)
-//    println(s"ouiDs: ${ouiDs.collect().toBuffer}")
-//    dataStream.foreachRDD{rdd=>
-//      val df = rdd.toDF()
-//      val filterDf = df.filter($"rssi".gt(-90)).filter($"AP".isin("14E4E6E186A4", "EC172FE3B340")).filter($"userMacAddr".substr(0, 6).isin(broadcastDs.collect():_*)).groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).orderBy($"userMacAddr", $"AP", $"ts").cache()
-//      val zipDf = filterDf.rdd.zipWithIndex().map(tup=>MyUtils.dataWithDt(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), new Timestamp(tup._1.getAs[Long]("ts") * 1000L), tup._1.getAs[String]("AP"))).toDF()
-//      zipDf.show(false)
-//      val indexer = new StringIndexer().setInputCol("AP").setOutputCol("Indexer")
-////      indexer.fit(filterDf).transform(filterDf).show(false)
-//      zipDf.createOrReplaceTempView("data0")
-//      zipDf.createOrReplaceTempView("data1")
-//      zipDf.createOrReplaceTempView("data2")
-//      spark.sql("SELECT COUNT(DISTINCT(userMacAddr)) FROM data0").show(2000, false)
-//      val resDf = spark.sql("SELECT data1.userMacAddr, data1.ts, data1.AP FROM data1, data0, data2 WHERE data1.userMacAddr = data0.userMacAddr AND data1.AP = data0.AP AND data1._id - data0._id = 1 AND data1.rssi > data0.rssi AND data1.userMacAddr = data2.userMacAddr AND data1.AP = data2.AP AND data2._id - data1._id = 1 AND data1.rssi > data2.rssi").orderBy($"userMacAddr", $"ts").coalesce(4)
-//      println(s"getNumPartitions: ${resDf.rdd.getNumPartitions}")
-////      val resDf = df.withColumn("AP", lit(5)).withColumn("statistic", lit(-1)).withColumn("monTime", lit(1495597823)).drop("userMacAddr", "rssi", "ts", "locStr")
-////      resDf.write.mode("append").jdbc("jdbc:mysql://localhost:3306/wibupt", "realtime_statistic", prop)
-//      resDf.show(2000, false)
-//    }
-
     val pairDstream = dataStream.map(item=>item.userMacAddr->item).mapWithState(StateSpec.function(stateSpec _))
 //    val pairDstream = dataStream.transform(rdd=>rdd.zipWithIndex().map(tup=>MyUtils.dataWithDt(tup._2, tup._1.userMacAddr, tup._1.rssi, new Timestamp(tup._1.ts * 1000L), tup._1.AP))).map(item=>item->item).mapWithState(StateSpec.function(stateSpec _))
 //    pairDstream.print()
     pairDstream.foreachRDD{rdd=>
       val dataDf = rdd.toDF().select(explode($"value").as("coll")).select($"coll.*").dropDuplicates()
-//      spark.sql("SELECT groupid, COUNT(groupid) FROM data GROUP BY groupid").show(false)
-//      groupDf.orderBy($"userMacAddr", $"AP", $"ts").show(2000, false)
-      val filterDf = dataDf.filter($"rssi".gt(-90)).filter($"userMacAddr".substr(0, 6).isin(broadcastDs.collect():_*)).groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).orderBy($"userMacAddr", $"AP", $"ts").cache()
+      val filterDf = dataDf.filter($"rssi".gt(-90)).filter($"userMacAddr".substr(0, 6).isin(broadcastDs.collect():_*)).groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).orderBy($"userMacAddr", $"AP", $"ts")
       val zipDf = filterDf.rdd.zipWithIndex().map(tup=>MyUtils.dataWithId(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), tup._1.getAs[Long]("ts"), tup._1.getAs[String]("AP"))).toDF()
       val groupDf = MyUtils.addColGroupid(zipDf)
-      groupDf.show(false)
-      groupDf.createOrReplaceTempView("data0")
-      groupDf.createOrReplaceTempView("data1")
-      groupDf.createOrReplaceTempView("data2")
-      val trajSql = "SELECT data1.userMacAddr, data1.ts, data1.AP, data1.groupid FROM data1, data0, data2 WHERE data1.userMacAddr = data0.userMacAddr AND data1.AP = data0.AP AND data1.ts - data0.ts <= 1800 AND data1._id - data0._id = 1 AND data1.rssi > data0.rssi AND data1.userMacAddr = data2.userMacAddr AND data1.AP = data2.AP AND data2.ts - data1.ts <= 1800 AND data2._id - data1._id = 1 AND data1.rssi > data2.rssi"
-      val resDf = spark.sql(trajSql).orderBy($"groupid", $"userMacAddr", $"ts").coalesce(4)
-      resDf.show(false)
+      val modifyDf = MyUtils.modifyColAP(groupDf).cache()
+//      modifyDf.show(2000, false)
+      modifyDf.createOrReplaceTempView("data0")
+      modifyDf.createOrReplaceTempView("data1")
+      modifyDf.createOrReplaceTempView("data2")
+      // 获取轨迹序列
+      val trajSql = "SELECT data1.userMacAddr, data1.ts, data1.AP, data1.groupid, data1.rssi FROM data1, data0, data2 WHERE data1.userMacAddr = data0.userMacAddr AND data1.AP = data0.AP AND data1._id - data0._id = 1 AND data1.rssi > data0.rssi AND data1.userMacAddr = data2.userMacAddr AND data1.AP = data2.AP AND data2._id - data1._id = 1 AND data1.rssi > data2.rssi"
+      val trajDf = spark.sql(trajSql).orderBy($"groupid", $"userMacAddr", $"ts").coalesce(4)
+//      trajDf.show(2000, false)
+      val zipTrajDf = trajDf.rdd.zipWithIndex().map(tup=>MyUtils.data(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), tup._1.getAs[Long]("ts"), tup._1.getAs[String]("AP"), tup._1.getAs[Int]("groupid"))).toDF().cache()
+      zipTrajDf.createOrReplaceTempView("data10")
+      zipTrajDf.createOrReplaceTempView("data11")
+      // 获取进出大楼人数
+      val comeSql = s"SELECT data10.userMacAddr, data10.ts, data10.AP, data11.ts, data11.AP, data10.groupid FROM data10, data11 WHERE data10.userMacAddr = data11.userMacAddr AND data10.groupid = data11.groupid AND data11._id - data10._id = 1 AND data11.ts - data10.ts <= $THRESHOLD AND data10.AP = '0' AND data11.AP = '1'"
+      val goSql = s"SELECT data10.userMacAddr, data10.ts, data10.AP, data11.ts, data11.AP, data10.groupid FROM data10, data11 WHERE data10.userMacAddr = data11.userMacAddr AND data10.groupid = data11.groupid AND data11._id - data10._id = 1 AND data11.ts - data10.ts <= $THRESHOLD AND data10.AP = '1' AND data11.AP = '0'"
+      spark.sql(comeSql).createOrReplaceTempView("comeData")
+      spark.sql(goSql).createOrReplaceTempView("goData")
+      val sql1 = "SELECT groupid, COUNT(groupid) AS comeCount FROM comeData GROUP BY groupid"
+      val sql2 = "SELECT groupid, COUNT(groupid) AS goCount FROM goData GROUP BY groupid"
+      val sql3 = "SELECT * FROM comeData"
+      val sql4 = "SELECT * FROM goData"
+      val comeCount = spark.sql(sql1)
+      val goCount = spark.sql(sql2)
+      val joinDf = comeCount.join(goCount, Seq("groupid"), "fullouter")
+//      joinDf.show(false)
+      joinDf.withColumn("comeCount", when($"comeCount".isNull, lit(0)).otherwise($"comeCount")).withColumn("goCount", when($"goCount".isNull, lit(0)).otherwise($"goCount")).createOrReplaceTempView("res")
+      val resDf = spark.sql("SELECT groupid, comeCount - goCount AS statistic FROM res")
+//      resDf.show(false)
+      resDf.write.mode("append").jdbc("jdbc:mysql://10.103.93.27:3306/test", "realtime_statistic", prop)
+//      spark.sql(sql3).show(false)
+//      spark.sql(sql1).show(false)
+//      spark.sql(sql4).show(false)
+//      spark.sql(sql2).show(false)
+//      val sql0 = "SELECT groupid, COUNT(groupid) FROM data GROUP BY groupid"
+//      spark.sql(sql0).show(false)
     }
 
     ssc.start()

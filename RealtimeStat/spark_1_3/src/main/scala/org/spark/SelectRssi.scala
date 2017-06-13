@@ -98,7 +98,7 @@ object SelectRssi {
       )
     )
     val dataDf = spark.createDataFrame(tmpRdd, schema)
-    val dataDs = dataDf.as[MyUtils.data]
+    val dataDs = dataDf.as[MyUtils.selectRssiData]
     val userId = dataDs.select("userMacAddr")
     userId.persist()
 
