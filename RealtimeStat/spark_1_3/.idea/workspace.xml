@@ -17,21 +17,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1125">
-              <caret line="84" column="21" lean-forward="false" selection-start-line="84" selection-start-column="21" selection-end-line="84" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="SelectRssi.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/SelectRssi.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1305">
-              <caret line="100" column="49" lean-forward="false" selection-start-line="100" selection-start-column="49" selection-end-line="100" selection-end-column="49" />
+            <state relative-caret-position="465">
+              <caret line="44" column="79" lean-forward="false" selection-start-line="44" selection-start-column="76" selection-end-line="44" selection-end-column="79" />
               <folding>
                 <element signature="e#19#44#0" expanded="false" />
               </folding>
@@ -42,8 +32,20 @@
       <file leaf-file-name="filterUnknownMACAddr.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/filterUnknownMACAddr.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-195">
-              <caret line="26" column="2" lean-forward="false" selection-start-line="26" selection-start-column="2" selection-end-line="26" selection-end-column="850" />
+            <state relative-caret-position="1230">
+              <caret line="97" column="87" lean-forward="false" selection-start-line="97" selection-start-column="87" selection-end-line="97" selection-end-column="87" />
+              <folding>
+                <element signature="e#0#25#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Get24HoursMACAddr.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/Get24HoursMACAddr.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-87">
+              <caret line="15" column="20" lean-forward="false" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -52,8 +54,8 @@
       <file leaf-file-name="StreamingDfDemo.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/StreamingDfDemo.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="65" />
+            <state relative-caret-position="186">
+              <caret line="117" column="54" lean-forward="false" selection-start-line="117" selection-start-column="54" selection-end-line="117" selection-end-column="54" />
               <folding>
                 <element signature="e#19#44#0" expanded="true" />
               </folding>
@@ -61,11 +63,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WriteMysqlDemo.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/WriteMysqlDemo.scala">
+      <file leaf-file-name="DataframeDemo.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/DataframeDemo.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="15" column="30" lean-forward="false" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
+            <state relative-caret-position="243">
+              <caret line="43" column="71" lean-forward="true" selection-start-line="43" selection-start-column="71" selection-end-line="43" selection-end-column="71" />
+              <folding>
+                <element signature="e#19#52#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RealtimeStatistic.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/RealtimeStatistic.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="258">
+              <caret line="96" column="1" lean-forward="true" selection-start-line="96" selection-start-column="1" selection-end-line="96" selection-end-column="1" />
               <folding>
                 <element signature="e#19#46#0" expanded="true" />
               </folding>
@@ -76,10 +90,22 @@
       <file leaf-file-name="MyUtils.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/MyUtils.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="585">
-              <caret line="39" column="72" lean-forward="false" selection-start-line="39" selection-start-column="72" selection-end-line="39" selection-end-column="72" />
+            <state relative-caret-position="127">
+              <caret line="90" column="49" lean-forward="true" selection-start-line="90" selection-start-column="49" selection-end-line="90" selection-end-column="49" />
               <folding>
                 <element signature="e#19#44#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WriteMysqlDemo.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/WriteMysqlDemo.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="16" column="4" lean-forward="false" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="99" />
+              <folding>
+                <element signature="e#19#46#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -113,42 +139,43 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Timestamp</find>
-      <find>get</find>
-      <find>tod</find>
-      <find>getAs</find>
-      <find>DAA1196AD90C</find>
-      <find>A088B44E25F8</find>
-      <find>loc</find>
-      <find>pri</find>
-      <find>24F094BACB25</find>
-      <find>zip</find>
-      <find>groupid</find>
-      <find>AA4B6AE60752</find>
-      <find>zipWithIndex</find>
-      <find>68A0F67A99D2</find>
-      <find>08EDB995FD6B</find>
-      <find>17</find>
-      <find>66A4C78190D1</find>
-      <find>.map(_.last)</find>
-      <find>dataStream</find>
-      <find>2CD05A25BAC3</find>
-      <find>withColumn</find>
-      <find>FCE99817A031</find>
-      <find>dataWithTs</find>
-      <find>mapw</find>
-      <find>resDf</find>
-      <find>data</find>
-      <find>2CF0A248F568</find>
       <find>dataWithDt</find>
       <find>dataWithId</find>
       <find>agg</find>
+      <find>009ACD12AEEF</find>
+      <find>cal</find>
+      <find>28FAA0B72F7D</find>
+      <find>equ</find>
+      <find>stateSpec</find>
+      <find>map</find>
+      <find>F0B42902A61E</find>
+      <find>desc</find>
+      <find>opt</find>
+      <find>parquet</find>
+      <find>PARQUETPATH</find>
+      <find>timeout</find>
+      <find>MemoryStore: Not enough space to cache rdd_1999_0 in memory! (computed 109.6 MB so far)</find>
+      <find>addColGroupid</find>
+      <find>getNumPartitions</find>
+      <find>PATH</find>
+      <find>rssi</find>
+      <find>date</find>
+      <find>dataDf</find>
+      <find>filterD</find>
+      <find>bla</find>
+      <find>99</find>
+      <find>orderBy</find>
+      <find>trajDf</find>
+      <find>dro</find>
+      <find>4</find>
+      <find>modifyCol</find>
     </findStrings>
     <replaceStrings>
       <replace>strArr</replace>
       <replace>MyUtils.dataWithId</replace>
       <replace>dataWithDt</replace>
       <replace>trajDf</replace>
+      <replace>trajDs</replace>
     </replaceStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -165,11 +192,14 @@
         <option value="$PROJECT_DIR$/src/main/scala/org/spark/mlDfDemo.scala" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/scala/org/spark/MllibStreamingDemo.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/filterUnknownMACAddr.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/org/spark/StructuredKafkaWordCount.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/org/spark/SelectRssi.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/org/spark/MyUtils.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/org/spark/WriteMysqlDemo.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/filterUnknownMACAddr.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/org/spark/MyUtils.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/org/spark/Get24HoursMACAddr.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/org/spark/RealtimeStatistic.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/org/spark/DataframeDemo.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/org/spark/StreamingDfDemo.scala" />
       </list>
     </option>
@@ -323,9 +353,9 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -335,61 +365,6 @@
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
   <component name="RunManager" selected="Application.StreamingDfDemo">
-    <configuration default="false" name="filterUnknownMACAddr" type="Application" factoryName="Application" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" value="filterUnknownMACAddr" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="spark_1_3" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="false" name="MllibStreamingDemo" type="Application" factoryName="Application" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="org.spark.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="MAIN_CLASS_NAME" value="org.spark.MllibStreamingDemo" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="10.103.93.27:2181 1 scandata 2" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="spark_1_3" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="false" name="StructuredKafkaWordCount" type="Application" factoryName="Application" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="org.spark.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="MAIN_CLASS_NAME" value="org.spark.StructuredKafkaWordCount" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="spark_1_3" />
-      <envs />
-      <method />
-    </configuration>
     <configuration default="false" name="StreamingDfDemo" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -418,6 +393,66 @@
         </pattern>
       </extension>
       <option name="MAIN_CLASS_NAME" value="org.spark.WriteMysqlDemo" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="spark_1_3" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="Get24HoursMACAddr" type="Application" factoryName="Application" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="org.spark.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="org.spark.Get24HoursMACAddr" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="spark_1_3" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="RealtimeStatistic" type="Application" factoryName="Application" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="org.spark.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="org.spark.RealtimeStatistic" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="10.103.93.27:9092 scandata root root" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="spark_1_3" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="DataframeDemo" type="Application" factoryName="Application" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="org.spark.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="org.spark.DataframeDemo" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -708,19 +743,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Application.filterUnknownMACAddr" />
-      <item index="1" class="java.lang.String" itemvalue="Application.MllibStreamingDemo" />
-      <item index="2" class="java.lang.String" itemvalue="Application.StructuredKafkaWordCount" />
-      <item index="3" class="java.lang.String" itemvalue="Application.StreamingDfDemo" />
-      <item index="4" class="java.lang.String" itemvalue="Application.WriteMysqlDemo" />
+      <item index="0" class="java.lang.String" itemvalue="Application.StreamingDfDemo" />
+      <item index="1" class="java.lang.String" itemvalue="Application.WriteMysqlDemo" />
+      <item index="2" class="java.lang.String" itemvalue="Application.Get24HoursMACAddr" />
+      <item index="3" class="java.lang.String" itemvalue="Application.RealtimeStatistic" />
+      <item index="4" class="java.lang.String" itemvalue="Application.DataframeDemo" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Application.StreamingDfDemo" />
-        <item index="1" class="java.lang.String" itemvalue="Application.WriteMysqlDemo" />
-        <item index="2" class="java.lang.String" itemvalue="Application.StructuredKafkaWordCount" />
-        <item index="3" class="java.lang.String" itemvalue="Application.filterUnknownMACAddr" />
-        <item index="4" class="java.lang.String" itemvalue="Application.MllibStreamingDemo" />
+        <item index="1" class="java.lang.String" itemvalue="Application.DataframeDemo" />
+        <item index="2" class="java.lang.String" itemvalue="Application.RealtimeStatistic" />
+        <item index="3" class="java.lang.String" itemvalue="Application.Get24HoursMACAddr" />
+        <item index="4" class="java.lang.String" itemvalue="Application.WriteMysqlDemo" />
       </list>
     </recent_temporary>
   </component>
@@ -756,21 +791,21 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3273906" sideWeight="0.503231" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14054927" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3273906" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3273906" sideWeight="0.49676898" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901135" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2956381" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30048466" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -784,8 +819,8 @@
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14054927" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3273906" sideWeight="0.503231" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14054927" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -800,10 +835,10 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3273906" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3273906" sideWeight="0.49676898" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901135" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2956381" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30048466" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -823,14 +858,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2160">
-          <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/SelectRssi.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="960">
@@ -855,35 +882,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/SelectRssi.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="960">
-          <caret line="77" column="23" lean-forward="false" selection-start-line="77" selection-start-column="23" selection-end-line="77" selection-end-column="23" />
-          <folding>
-            <element signature="e#19#44#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/AnomalyDetectionDemo.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#19#52#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2160">
-          <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -911,7 +909,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -939,7 +936,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -958,7 +954,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -977,7 +972,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -996,7 +990,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1014,7 +1007,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1032,7 +1024,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1050,7 +1041,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1068,7 +1058,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1076,7 +1065,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1094,7 +1082,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1112,7 +1099,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1130,7 +1116,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2160">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1161,22 +1146,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/AnomalyDetectionDemo.scala">
+    <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="14" column="87" lean-forward="false" selection-start-line="14" selection-start-column="87" selection-end-line="14" selection-end-column="87" />
-          <folding>
-            <element signature="e#19#52#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="840">
+          <caret line="56" column="20" lean-forward="false" selection-start-line="56" selection-start-column="20" selection-end-line="56" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/SelectRssi.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1305">
-          <caret line="100" column="49" lean-forward="false" selection-start-line="100" selection-start-column="49" selection-end-line="100" selection-end-column="49" />
+        <state relative-caret-position="465">
+          <caret line="44" column="79" lean-forward="false" selection-start-line="44" selection-start-column="76" selection-end-line="44" selection-end-column="79" />
           <folding>
             <element signature="e#19#44#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/WriteMysqlDemo.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="16" column="4" lean-forward="false" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="99" />
+          <folding>
+            <element signature="e#19#46#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1191,36 +1183,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/AnomalyDetectionDemo.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="14" column="87" lean-forward="false" selection-start-line="14" selection-start-column="87" selection-end-line="14" selection-end-column="87" />
+          <folding>
+            <element signature="e#19#52#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/filterUnknownMACAddr.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1230">
+          <caret line="97" column="87" lean-forward="false" selection-start-line="97" selection-start-column="87" selection-end-line="97" selection-end-column="87" />
+          <folding>
+            <element signature="e#0#25#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-sql_2.11/2.1.0/spark-sql_2.11-2.1.0.jar!/org/apache/spark/sql/DataFrameReader.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/Get24HoursMACAddr.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-87">
+          <caret line="15" column="20" lean-forward="false" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/DataframeDemo.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="43" column="71" lean-forward="true" selection-start-line="43" selection-start-column="71" selection-end-line="43" selection-end-column="71" />
+          <folding>
+            <element signature="e#19#52#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/MyUtils.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="39" column="72" lean-forward="false" selection-start-line="39" selection-start-column="72" selection-end-line="39" selection-end-column="72" />
+        <state relative-caret-position="127">
+          <caret line="90" column="49" lean-forward="true" selection-start-line="90" selection-start-column="49" selection-end-line="90" selection-end-column="49" />
           <folding>
             <element signature="e#19#44#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/RealtimeStatistic.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1125">
-          <caret line="84" column="21" lean-forward="false" selection-start-line="84" selection-start-column="21" selection-end-line="84" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/filterUnknownMACAddr.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-195">
-          <caret line="26" column="2" lean-forward="false" selection-start-line="26" selection-start-column="2" selection-end-line="26" selection-end-column="850" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/WriteMysqlDemo.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="15" column="30" lean-forward="false" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
+        <state relative-caret-position="258">
+          <caret line="96" column="1" lean-forward="true" selection-start-line="96" selection-start-column="1" selection-end-line="96" selection-end-column="1" />
           <folding>
             <element signature="e#19#46#0" expanded="true" />
           </folding>
@@ -1229,8 +1250,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/spark/StreamingDfDemo.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="65" />
+        <state relative-caret-position="186">
+          <caret line="117" column="54" lean-forward="false" selection-start-line="117" selection-start-column="54" selection-end-line="117" selection-end-column="54" />
           <folding>
             <element signature="e#19#44#0" expanded="true" />
           </folding>
