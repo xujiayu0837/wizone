@@ -83,12 +83,12 @@ object RealtimeStatistic {
       val goCount = spark.sql(sql2)
       val joinDf = comeCount.join(goCount, Seq("groupid"), "fullouter")
       //      joinDf.show(false)
-      val newJoinDf = MyUtils.modifyCol(joinDf)
+      val newJoinDf = MyUtils.modifyColCount(joinDf)
       newJoinDf.createOrReplaceTempView("res")
       val countDf = spark.sql("SELECT groupid, comeCount - goCount AS statistic FROM res")
       val resDf = MyUtils.addColMonTime(countDf)
       resDf.show(false)
-//      resDf.write.mode("append").jdbc("jdbc:mysql://10.103.93.27:3306/test", "realtime_statistic", prop)
+//      resDf.write.mode("append").jdbc("jdbc:mysql://10.103.93.27:3306/test?verifyServerCertificate=false&useSSL=true", "realtime_statistic", prop)
     }
 
     ssc.start()

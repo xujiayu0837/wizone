@@ -13,7 +13,7 @@ import org.apache.spark.sql.functions.{dayofmonth, input_file_name}
 object Get24HoursMACAddr {
   val PATH = new StringBuilder("hdfs://10.103.93.27:9000/scandata/*/")
   val PARQUETPATH = new StringBuilder("/Users/xujiayu/parquet")
-  val DAYDELTA = -10
+  val DAYDELTA = -1
   val DATEFORMAT = "yyyyMMdd"
   val DAYFORMAT = "dd"
 
