@@ -190,5 +190,7 @@
     <orderEntry type="library" name="Maven: org.jpmml:pmml-schema:1.2.15" level="project" />
     <orderEntry type="library" name="Maven: redis.clients:jedis:2.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.4.2" level="project" />
+    <orderEntry type="library" name="Maven: org.ansj:ansj_seg:5.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.nlpcn:nlp-lang:1.7.2" level="project" />
   </component>
 </module>

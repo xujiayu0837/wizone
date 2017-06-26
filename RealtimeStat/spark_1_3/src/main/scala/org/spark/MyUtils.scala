@@ -2,8 +2,9 @@ package org.spark
 
 import java.sql.Timestamp
 
+import org.apache.spark.sql.expressions.WindowSpec
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.functions.{lit, when, input_file_name, from_unixtime, udf, hour}
+import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 
 /**
@@ -19,7 +20,7 @@ object MyUtils {
   val groupid4 = Array("14E4E6E17648", "14E4E6E176C8")
   val groupid5 = Array("14E4E6E186A4", "EC172FE3B340")
   val groupid6 = Array("14E4E6E17908", "14E4E6E179F2")
-  val groupid7 = Array("14E4E6E17950", "14E4E6E18658")
+  val groupid7 = Array("14E4E6E18658", "14E4E6E17950")
   val groupid8 = Array("14E4E6E1790A", "14E4E6E173FE")
   val groupid9 = Array("085700412D4E", "085700411A86")
   val groupid10 = Array("0C8268F15CB2", "0C8268F17FB8")
@@ -79,6 +80,19 @@ object MyUtils {
   def addColMonTime(dataframe: DataFrame): DataFrame = {
     val resDf = dataframe.withColumn("monTime", lit(System.currentTimeMillis().toString.substring(0, 10).toInt))
     return resDf
+  }
+  def addColsPrevNext(dataFrame: DataFrame, window: WindowSpec): DataFrame = {
+    val rssiLag = lag("rssi", 1).over(window)
+    val rssiLead = lead("rssi", 1).over(window)
+    val lagLeadDf = dataFrame.withColumn("rssiPrev", rssiLag).withColumn("rssiNext", rssiLead)
+    return lagLeadDf
+  }
+  def addColsPrev(dataFrame: DataFrame, window: WindowSpec): DataFrame = {
+    val tsLag = lag("ts", 1).over(window)
+    val APLag = lag("AP", 1).over(window)
+    val rssiLag = lag("rssi", 1).over(window)
+    val lagDf = dataFrame.withColumn("tsPrev", tsLag).withColumn("APPrev", APLag).withColumn("rssiPrev", rssiLag)
+    return lagDf
   }
 //  def modifyColAP(dataDf: DataFrame): DataFrame = {
 //    val modifyDf = dataDf.withColumn("AP", when($"AP".isin(Array(groupid1(0), groupid2(0), groupid3(0), groupid4(0), groupid5(0), groupid6(0), groupid7(0), groupid8(0), groupid9(0), groupid10(0), groupid11(0), groupid12(0), groupid13(0), groupid14(0), groupid15(0), groupid16(0), groupid17(0), groupid18(0), groupid19(0)):_*), lit("0"))
