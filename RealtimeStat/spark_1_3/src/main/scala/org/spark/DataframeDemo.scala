@@ -12,7 +12,7 @@ import org.apache.spark.sql.functions.{input_file_name, round, mean}
   */
 object DataframeDemo {
   val PATH = new StringBuilder("hdfs://10.103.93.27:9000/scandata/*/")
-  val DAYDELTA = -3
+  val DAYDELTA = -1
   val THRESHOLD = 1800
   val DATEFORMAT = "yyyyMMdd"
   val PARQUETPATH = new StringBuilder("/Users/xujiayu/parquet")
