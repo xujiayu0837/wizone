@@ -87,7 +87,7 @@ object StreamingDfDemo {
     dataStream.foreachRDD{rdd=>
       //      println(s"getNumPartitions: ${rdd.getNumPartitions}")
 //      val dataDs = rdd.toDF().select(explode($"value").as("coll")).select($"coll.*").dropDuplicates().coalesce(numCores)
-      val dataDs = rdd.toDF().persist(StorageLevel.MEMORY_AND_DISK_SER).coalesce(numCores)
+      val dataDs = rdd.toDF().repartition(numCores).persist(StorageLevel.MEMORY_AND_DISK_SER)
 //      val filterDs = dataDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*)).filter($"userMacAddr".substr(0, 6).isin(broadcastDs.collect():_*)).groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).orderBy($"userMacAddr", $"AP", $"ts").coalesce(numCores)
       val filterDs = dataDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*)).groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).orderBy($"userMacAddr", $"AP", $"ts").coalesce(numCores)
 //      val zipDf = filterDs.rdd.zipWithIndex().map(tup=>MyUtils.dataWithId(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), tup._1.getAs[Long]("ts"), tup._1.getAs[String]("AP"))).toDF()
