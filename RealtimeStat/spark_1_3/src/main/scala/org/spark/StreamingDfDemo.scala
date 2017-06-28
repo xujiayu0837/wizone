@@ -9,7 +9,8 @@ import org.apache.spark.SparkConf
 import org.apache.spark.ml.feature.StringIndexer
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.expressions.Window
-import org.apache.spark.sql.functions.{broadcast, count, explode, from_unixtime, lit, max, mean, round, when, lag, lead}
+import org.apache.spark.sql.functions.{broadcast, count, explode, from_unixtime, lag, lead, lit, max, mean, round, when}
+import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka.KafkaUtils
 
@@ -79,39 +80,46 @@ object StreamingDfDemo {
     prop.put("password", mysqlPasswd)
     val ouiDs = spark.read.option("sep", "|").csv(OUIFILENAME.toString()).map(_.getString(0))
     val broadcastDs = broadcast(ouiDs)
-    val blacklistDs = spark.read.parquet(PARQUETPATH.toString()).map(_.getString(0)).coalesce(numCores).cache()
+    val blacklistDs = spark.read.parquet(PARQUETPATH.toString()).map(_.getString(0)).coalesce(numCores).persist(StorageLevel.MEMORY_AND_DISK_SER)
 //    val pairDstream = dataStream.map(item=>item.AP->item).mapWithState(StateSpec.function(stateSpec _).timeout(Seconds(1800)))
     //    val pairDstream = dataStream.transform(rdd=>rdd.zipWithIndex().map(tup=>MyUtils.dataWithDt(tup._2, tup._1.userMacAddr, tup._1.rssi, new Timestamp(tup._1.ts * 1000L), tup._1.AP))).map(item=>item->item).mapWithState(StateSpec.function(stateSpec _))
     //    pairDstream.print()
     dataStream.foreachRDD{rdd=>
       //      println(s"getNumPartitions: ${rdd.getNumPartitions}")
 //      val dataDs = rdd.toDF().select(explode($"value").as("coll")).select($"coll.*").dropDuplicates().coalesce(numCores)
-      val dataDs = rdd.toDF().dropDuplicates().coalesce(numCores)
+      val dataDs = rdd.toDF().persist(StorageLevel.MEMORY_AND_DISK_SER).coalesce(numCores)
 //      val filterDs = dataDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*)).filter($"userMacAddr".substr(0, 6).isin(broadcastDs.collect():_*)).groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).orderBy($"userMacAddr", $"AP", $"ts").coalesce(numCores)
-//      dataDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*)).filter($"userMacAddr".substr(0, 6).isin(broadcastDs.collect():_*)).groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).coalesce(numCores).createOrReplaceTempView("data30")
-      dataDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*)).groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).coalesce(numCores).createOrReplaceTempView("data30")
-      val sql0 = "SELECT data30.userMacAddr, data30.rssi, data30.ts, data30.AP FROM data30, (SELECT userMacAddr, ts, MAX(rssi) max FROM data30 GROUP BY userMacAddr, ts) data31 WHERE data30.userMacAddr = data31.userMacAddr AND data30.ts = data31.ts AND data30.rssi = data31.max ORDER BY data30.userMacAddr, data30.AP, data30.ts"
-      val filterDs = spark.sql(sql0).coalesce(numCores)
+      val filterDs = dataDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*)).groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).orderBy($"userMacAddr", $"AP", $"ts").coalesce(numCores)
 //      val zipDf = filterDs.rdd.zipWithIndex().map(tup=>MyUtils.dataWithId(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), tup._1.getAs[Long]("ts"), tup._1.getAs[String]("AP"))).toDF()
 //      val groupDf = MyUtils.addColGroupid(zipDf)
-//      val modifyDf = MyUtils.modifyColAP(groupDf).cache()
+//      val modifyDf = MyUtils.modifyColAP(groupDf).persist(StorageLevel.MEMORY_AND_DISK_SER)
 //      //      modifyDf.show(2000, false)
 //      modifyDf.createOrReplaceTempView("data0")
 //      modifyDf.createOrReplaceTempView("data1")
 //      modifyDf.createOrReplaceTempView("data2")
 //      // 获取轨迹序列
-//      val trajSql = "SELECT data1.userMacAddr, data1.ts, data1.AP, data1.groupid, data1.rssi FROM data1, data0, data2 WHERE data1.userMacAddr = data0.userMacAddr AND data1.AP = data0.AP AND data1._id - data0._id = 1 AND data1.rssi > data0.rssi AND data1.userMacAddr = data2.userMacAddr AND data1.AP = data2.AP AND data2._id - data1._id = 1 AND data1.rssi > data2.rssi"
+//      val peakSql = "SELECT data1.userMacAddr, data1.ts, data1.AP, data1.groupid, data1.rssi FROM data1, data0, data2 WHERE data1.userMacAddr = data0.userMacAddr AND data1.AP = data0.AP AND data1._id - data0._id = 1 AND data1.rssi > data0.rssi AND data1.userMacAddr = data2.userMacAddr AND data1.AP = data2.AP AND data2._id - data1._id = 1 AND data1.rssi > data2.rssi"
       val trajWindow = Window.partitionBy("userMacAddr", "AP").orderBy("userMacAddr", "AP", "ts")
       val prevNextDf = MyUtils.addColsPrevNext(filterDs, trajWindow)
       val groupDf = MyUtils.addColGroupid(prevNextDf)
       val modifyDf = MyUtils.modifyColAP(groupDf)
       modifyDf.createOrReplaceTempView("data0")
+      val peakSql = "SELECT userMacAddr, ts, AP, groupid, rssi FROM data0 WHERE (rssi > rssiPrev AND rssi > rssiNext) OR (rssi > rssiPrev AND rssiNext IS NULL) OR (rssiPrev IS NULL AND rssi > rssiNext)"
+      val trajDs = spark.sql(peakSql).coalesce(numCores).orderBy("groupid", "userMacAddr", "ts")
+      spark.sql(peakSql).coalesce(numCores).createOrReplaceTempView("data30")
       // 获取轨迹序列
-//      val trajSql1 = "SELECT userMacAddr, ts, AP, groupid, rssi FROM data0 WHERE rssi > rssiPrev AND rssi > rssiNext"
-      val trajSql = "SELECT userMacAddr, ts, AP, groupid, rssi FROM data0 WHERE rssi > rssiPrev AND (rssiNext IS NULL OR rssi > rssiNext)"
-      val trajDs = spark.sql(trajSql).orderBy($"groupid", $"userMacAddr", $"ts").coalesce(numCores)
+      val maxRssSql = "SELECT data30.userMacAddr, data30.rssi, data30.ts, data30.AP, data30.groupid FROM data30, (SELECT userMacAddr, ts, MAX(rssi) max FROM data30 GROUP BY userMacAddr, ts) data31 WHERE data30.userMacAddr = data31.userMacAddr AND data30.ts = data31.ts AND data30.rssi = data31.max"
+      spark.sql(maxRssSql).coalesce(numCores).createOrReplaceTempView("data32")
+//      val groupSql = "SELECT userMacAddr, ts, rssi FROM data32 GROUP BY userMacAddr, ts, rssi"
+//      val groupRssiDf = spark.sql(groupSql)
+//      groupRssiDf.createOrReplaceTempView("data33")
+//      groupRssiDf.show(2000, false)
+//      val trajSql = "SELECT data32.userMacAddr, data32.rssi, data32.ts, data32.AP, data32.groupid FROM data32, data33 WHERE data32.userMacAddr = data33.userMacAddr AND data32.ts = data33.ts AND data32.rssi = data33.rssi AND data32.AP = 'inside'"
+//      val trajSql = "SELECT data32.userMacAddr, data32.rssi, data32.ts, data32.AP, data32.groupid FROM data32, (SELECT userMacAddr, ts, rssi, MIN(AP) min FROM data32 GROUP BY userMacAddr, ts, rssi) data33 WHERE data32.userMacAddr = data33.userMacAddr AND data32.ts = data33.ts AND data32.rssi = data33.rssi AND data32.AP = data33.min"
+//      val trajDs = spark.sql(trajSql).orderBy("groupid", "userMacAddr", "ts").coalesce(numCores)
       trajDs.show(2000, false)
-//      val zipTrajDf = trajDs.rdd.zipWithIndex().map(tup=>MyUtils.data(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), tup._1.getAs[Long]("ts"), tup._1.getAs[String]("AP"), tup._1.getAs[Int]("groupid"))).toDF().cache()
+
+//      val zipTrajDf = trajDs.rdd.zipWithIndex().map(tup=>MyUtils.data(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), tup._1.getAs[Long]("ts"), tup._1.getAs[String]("AP"), tup._1.getAs[Int]("groupid"))).toDF().persist(StorageLevel.MEMORY_AND_DISK_SER)
 //      zipTrajDf.createOrReplaceTempView("data10")
 //      zipTrajDf.createOrReplaceTempView("data11")
 //      // 获取进出大楼人数
@@ -150,9 +158,9 @@ object StreamingDfDemo {
 //      base.show(2000, false)
       val joinDs = base.join(count, Seq("groupid"), "fullouter").coalesce(numCores)
       MyUtils.modifyColBase(joinDs).createOrReplaceTempView("res")
-      val resDf = MyUtils.addColMonTime(spark.sql("SELECT groupid, base + count AS statistic FROM res"))
+      val resDf = MyUtils.addColMonTime(spark.sql("SELECT groupid, base + count AS statistic FROM res")).persist(StorageLevel.MEMORY_AND_DISK_SER)
       resDf.show(2000, false)
-//      resDf.write.mode("append").jdbc(new StringBuilder(jdbcMysql).append("?verifyServerCertificate=false&useSSL=true").toString(), "realtime_statistic", prop)
+      resDf.write.mode("append").jdbc(new StringBuilder(jdbcMysql).append("?verifyServerCertificate=false&useSSL=true").toString(), "realtime_statistic", prop)
     }
 
     ssc.start()

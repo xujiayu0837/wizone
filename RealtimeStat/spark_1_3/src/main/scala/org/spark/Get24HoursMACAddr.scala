@@ -16,7 +16,7 @@ import util.control.Breaks._
 object Get24HoursMACAddr {
   val PATH = new StringBuilder("hdfs://10.103.93.27:9000/scandata/*/")
   val PARQUETPATH = new StringBuilder("/Users/xujiayu/parquet")
-  val DAYDELTA = -3
+  val DAYDELTA = -1
   val DATEFORMAT = "yyyyMMdd"
   val DAYFORMAT = "dd"
   var BLACKLISTBUF = mutable.Buffer[String]()
