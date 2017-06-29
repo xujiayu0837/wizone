@@ -99,27 +99,27 @@ object StreamingDfDemo {
 //      modifyDf.createOrReplaceTempView("data2")
 //      // 获取轨迹序列
 //      val peakSql = "SELECT data1.userMacAddr, data1.ts, data1.AP, data1.groupid, data1.rssi FROM data1, data0, data2 WHERE data1.userMacAddr = data0.userMacAddr AND data1.AP = data0.AP AND data1._id - data0._id = 1 AND data1.rssi > data0.rssi AND data1.userMacAddr = data2.userMacAddr AND data1.AP = data2.AP AND data2._id - data1._id = 1 AND data1.rssi > data2.rssi"
-      val trajWindow = Window.partitionBy("userMacAddr", "AP").orderBy("userMacAddr", "AP", "ts")
-      val prevNextDf = MyUtils.addColsPrevNext(filterDs, trajWindow)
+      // 获取轨迹序列模块
+      val peakWindow = Window.partitionBy("userMacAddr", "AP").orderBy("userMacAddr", "AP", "ts")
+      val prevNextDf = MyUtils.addColsPrevNext(filterDs, peakWindow)
       val groupDf = MyUtils.addColGroupid(prevNextDf)
       val modifyDf = MyUtils.modifyColAP(groupDf)
       modifyDf.createOrReplaceTempView("data0")
       val peakSql = "SELECT userMacAddr, ts, AP, groupid, rssi FROM data0 WHERE (rssi > rssiPrev AND rssi > rssiNext) OR (rssi > rssiPrev AND rssiNext IS NULL) OR (rssiPrev IS NULL AND rssi > rssiNext)"
-      val trajDs = spark.sql(peakSql).coalesce(numCores).orderBy("groupid", "userMacAddr", "ts")
-      spark.sql(peakSql).coalesce(numCores).createOrReplaceTempView("data30")
-      // 获取轨迹序列
-      val maxRssSql = "SELECT data30.userMacAddr, data30.rssi, data30.ts, data30.AP, data30.groupid FROM data30, (SELECT userMacAddr, ts, MAX(rssi) max FROM data30 GROUP BY userMacAddr, ts) data31 WHERE data30.userMacAddr = data31.userMacAddr AND data30.ts = data31.ts AND data30.rssi = data31.max"
-      spark.sql(maxRssSql).coalesce(numCores).createOrReplaceTempView("data32")
-//      val groupSql = "SELECT userMacAddr, ts, rssi FROM data32 GROUP BY userMacAddr, ts, rssi"
-//      val groupRssiDf = spark.sql(groupSql)
-//      groupRssiDf.createOrReplaceTempView("data33")
-//      groupRssiDf.show(2000, false)
-//      val trajSql = "SELECT data32.userMacAddr, data32.rssi, data32.ts, data32.AP, data32.groupid FROM data32, data33 WHERE data32.userMacAddr = data33.userMacAddr AND data32.ts = data33.ts AND data32.rssi = data33.rssi AND data32.AP = 'inside'"
-//      val trajSql = "SELECT data32.userMacAddr, data32.rssi, data32.ts, data32.AP, data32.groupid FROM data32, (SELECT userMacAddr, ts, rssi, MIN(AP) min FROM data32 GROUP BY userMacAddr, ts, rssi) data33 WHERE data32.userMacAddr = data33.userMacAddr AND data32.ts = data33.ts AND data32.rssi = data33.rssi AND data32.AP = data33.min"
-//      val trajDs = spark.sql(trajSql).orderBy("groupid", "userMacAddr", "ts").coalesce(numCores)
-      trajDs.show(2000, false)
+      val peakDs = spark.sql(peakSql).coalesce(numCores)
+//      peakDs.orderBy("groupid", "userMacAddr", "ts").show(2000, false)
+      val APWindow = Window.partitionBy("userMacAddr", "ts", "rssi").orderBy("userMacAddr", "ts", "rssi", "AP")
+      MyUtils.addColAPPrev(peakDs, APWindow).createOrReplaceTempView("data30")
+      val APSql = "SELECT userMacAddr, ts, AP, groupid, rssi FROM data30 WHERE apPrev IS NULL"
+      val APDs = spark.sql(APSql).coalesce(numCores)
+      val rssWindow = Window.partitionBy("userMacAddr", "ts").orderBy("userMacAddr", "ts", "rssi")
+      MyUtils.addColRssNext(APDs, rssWindow).createOrReplaceTempView("data31")
+//      MyUtils.addColRssNext(APDs, rssWindow).orderBy("groupid", "userMacAddr", "ts").show(2000, false)
+      val rssSql = "SELECT userMacAddr, ts, AP, groupid, rssi FROM data31 WHERE rssNext IS NULL"
+      val trajDs = spark.sql(rssSql).coalesce(numCores)
+      trajDs.orderBy("groupid", "userMacAddr", "ts").show(2000, false)
 
-//      val zipTrajDf = trajDs.rdd.zipWithIndex().map(tup=>MyUtils.data(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), tup._1.getAs[Long]("ts"), tup._1.getAs[String]("AP"), tup._1.getAs[Int]("groupid"))).toDF().persist(StorageLevel.MEMORY_AND_DISK_SER)
+//      val zipTrajDf = peakDs.rdd.zipWithIndex().map(tup=>MyUtils.data(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), tup._1.getAs[Long]("ts"), tup._1.getAs[String]("AP"), tup._1.getAs[Int]("groupid"))).toDF().persist(StorageLevel.MEMORY_AND_DISK_SER)
 //      zipTrajDf.createOrReplaceTempView("data10")
 //      zipTrajDf.createOrReplaceTempView("data11")
 //      // 获取进出大楼人数
@@ -128,15 +128,14 @@ object StreamingDfDemo {
       // 获取进出大楼人数
       val window = Window.partitionBy("groupid", "userMacAddr").orderBy("groupid", "userMacAddr", "ts")
       MyUtils.addColsPrev(trajDs, window).createOrReplaceTempView("data10")
-      val comeSql = "SELECT userMacAddr, tsPrev, APPrev, rssiPrev, ts, AP, rssi, groupid FROM data10 WHERE AP = 'inside' AND APPrev = 'outside'"
-      val goSql = "SELECT userMacAddr, tsPrev, APPrev, rssiPrev, ts, AP, rssi, groupid FROM data10 WHERE AP = 'outside' AND APPrev = 'inside'"
+      val comeSql = "SELECT userMacAddr, tsPrev, apPrev, rssiPrev, ts, AP, rssi, groupid FROM data10 WHERE AP = 'inside' AND apPrev = 'outside'"
+      val goSql = "SELECT userMacAddr, tsPrev, apPrev, rssiPrev, ts, AP, rssi, groupid FROM data10 WHERE AP = 'outside' AND apPrev = 'inside'"
       spark.sql(comeSql).createOrReplaceTempView("comeData")
       spark.sql(goSql).createOrReplaceTempView("goData")
       val sql1 = "SELECT groupid, COUNT(groupid) AS comeCount FROM comeData GROUP BY groupid"
       val sql2 = "SELECT groupid, COUNT(groupid) AS goCount FROM goData GROUP BY groupid"
       val sql3 = "SELECT * FROM comeData"
       val sql4 = "SELECT * FROM goData"
-//      spark.sql(sql3).orderBy("groupid", "userMacAddr").show(2000, false)
       spark.sql(sql3).show(2000, false)
 //      spark.sql(sql1).show(false)
       spark.sql(sql4).show(2000, false)

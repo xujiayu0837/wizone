@@ -91,8 +91,18 @@ object MyUtils {
     val tsLag = lag("ts", 1).over(window)
     val APLag = lag("AP", 1).over(window)
     val rssiLag = lag("rssi", 1).over(window)
-    val lagDf = dataFrame.withColumn("tsPrev", tsLag).withColumn("APPrev", APLag).withColumn("rssiPrev", rssiLag)
+    val lagDf = dataFrame.withColumn("tsPrev", tsLag).withColumn("apPrev", APLag).withColumn("rssiPrev", rssiLag)
     return lagDf
+  }
+  def addColAPPrev(dataFrame: DataFrame, window: WindowSpec): DataFrame = {
+    val APLag = lag("AP", 1).over(window)
+    val lagDf = dataFrame.withColumn("apPrev", APLag)
+    return lagDf
+  }
+  def addColRssNext(dataFrame: DataFrame, window: WindowSpec): DataFrame = {
+    val rssLead = lead("rssi", 1).over(window)
+    val leadDf = dataFrame.withColumn("rssNext", rssLead)
+    return leadDf
   }
 //  def modifyColAP(dataDf: DataFrame): DataFrame = {
 //    val modifyDf = dataDf.withColumn("AP", when($"AP".isin(Array(groupid1(0), groupid2(0), groupid3(0), groupid4(0), groupid5(0), groupid6(0), groupid7(0), groupid8(0), groupid9(0), groupid10(0), groupid11(0), groupid12(0), groupid13(0), groupid14(0), groupid15(0), groupid16(0), groupid17(0), groupid18(0), groupid19(0)):_*), lit("0"))
