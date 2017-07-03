@@ -72,7 +72,7 @@ object StreamingDfDemo {
       //      "auto.offset.reset" -> "smallest"
     )
     val messages = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topicsSet)
-    val lines = messages.map(_._2).map(_.split("[|]"))
+    val lines = messages.map(_._2).map(_.split("[|]")).filter(_.length == 5)
     //    val dataStream = lines.map(item=>data(item(0).trim, item(1).toDouble, new Timestamp(item(2).toLong * 1000L), item(3).trim))
     val dataStream = lines.map(item=>MyUtils.dataWithId(item(0).toLong, item(1).trim, item(2).toDouble, item(3).toLong, item(4).trim))
     val prop = new Properties()
@@ -105,6 +105,8 @@ object StreamingDfDemo {
       val groupDf = MyUtils.addColGroupid(prevNextDf)
       val modifyDf = MyUtils.modifyColAP(groupDf)
       modifyDf.createOrReplaceTempView("data0")
+//      val countSql = "SELECT data0.userMacAddr, data0.ts, data0.rssi, data0.AP, data0.groupid, data40.count FROM data0, (SELECT userMacAddr, ts, rssi, COUNT(*) AS count FROM data0 GROUP BY userMacAddr, ts, rssi) data40 WHERE data0.userMacAddr = data40.userMacAddr AND data0.ts = data40.ts AND data0.rssi = data40.rssi AND data40.count > 1"
+//      spark.sql(countSql).orderBy("userMacAddr", "ts", "rssi").show(2000, false)
       val peakSql = "SELECT userMacAddr, ts, AP, groupid, rssi FROM data0 WHERE (rssi > rssiPrev AND rssi > rssiNext) OR (rssi > rssiPrev AND rssiNext IS NULL) OR (rssiPrev IS NULL AND rssi > rssiNext)"
       val peakDs = spark.sql(peakSql).coalesce(numCores)
 //      peakDs.orderBy("groupid", "userMacAddr", "ts").show(2000, false)

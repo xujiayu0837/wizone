@@ -105,10 +105,10 @@ object MyUtils {
     return leadDf
   }
 //  def modifyColAP(dataDf: DataFrame): DataFrame = {
-//    val modifyDf = dataDf.withColumn("AP", when($"AP".isin(Array(groupid1(0), groupid2(0), groupid3(0), groupid4(0), groupid5(0), groupid6(0), groupid7(0), groupid8(0), groupid9(0), groupid10(0), groupid11(0), groupid12(0), groupid13(0), groupid14(0), groupid15(0), groupid16(0), groupid17(0), groupid18(0), groupid19(0)):_*), lit("0"))
-//      .when($"AP".isin(Array(groupid1(1), groupid2(1), groupid3(1), groupid4(1), groupid5(1), groupid6(1), groupid7(1), groupid8(1), groupid9(1), groupid10(1), groupid11(1), groupid12(1), groupid13(1), groupid14(1), groupid15(1), groupid16(1), groupid17(1), groupid18(1), groupid19(1)):_*), lit("1"))
-//      .when($"AP".isin(groupid16(2)), lit("2"))
-//      .when($"AP".isin(groupid16(3)), lit("3"))
+//    val modifyDf = dataDf.withColumn("AP", when($"AP".isin(Array(groupid1(0), groupid2(0), groupid3(0), groupid4(0), groupid5(0), groupid6(0), groupid7(0), groupid8(0), groupid9(0), groupid10(0), groupid11(0), groupid12(0), groupid13(0), groupid14(0), groupid15(0), groupid16(0), groupid17(0), groupid18(0), groupid19(0)):_*), lit("outside"))
+//      .when($"AP".isin(Array(groupid1(1), groupid2(1), groupid3(1), groupid4(1), groupid5(1), groupid6(1), groupid7(1), groupid8(1), groupid9(1), groupid10(1), groupid11(1), groupid12(1), groupid13(1), groupid14(1), groupid15(1), groupid16(1), groupid17(1), groupid18(1), groupid19(1)):_*), lit("inside"))
+//      .when($"AP".isin(groupid16(2)), lit("outside1"))
+//      .when($"AP".isin(groupid16(3)), lit("inside1"))
 //      .otherwise(lit("-1")))
 //    return modifyDf
 //  }

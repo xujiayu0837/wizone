@@ -29,7 +29,8 @@ object StreamingTest {
       "metadata.broker.list"->brokers
     )
     val messages = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topicsSet)
-    val lines = messages.map(_._2).map(_.split("[|]"))
+//    messages.map(_._2).map(_.split("[|]")).filter(_.length != 5).print()
+    val lines = messages.map(_._2).map(_.split("[|]")).filter(_.length == 5)
     val dataStream = lines.map(item=>MyUtils.dataWithId(item(0).toLong, item(1).trim, item(2).toDouble, item(3).toLong, item(4).trim))
     dataStream.foreachRDD{rdd=>
       val dataDs = rdd.toDF().coalesce(4)

@@ -37,7 +37,7 @@ object Get24HoursMACAddr {
       println(s"date: $date")
       val day = dayFmt.format(time)
 
-      val dataset = spark.read.option("sep", "|").schema(MyUtils.schema).csv(PATH.append(date).toString()).withColumn("AP", MyUtils.getAP(input_file_name)).coalesce(4)
+      val dataset = spark.read.option("sep", "|").option("mode", "DROPMALFORMED").schema(MyUtils.schema).csv(PATH.append(date).toString()).withColumn("AP", MyUtils.getAP(input_file_name)).coalesce(4)
       //    dataset.show(false)
       val datetimeDf = MyUtils.convertTimestampToDatetime(dataset)
       //    datetimeDf.show(false)
