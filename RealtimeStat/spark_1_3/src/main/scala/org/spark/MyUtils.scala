@@ -2,6 +2,7 @@ package org.spark
 
 import java.sql.Timestamp
 
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.expressions.WindowSpec
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
@@ -129,6 +130,21 @@ object MyUtils {
   def convertTimestampToDatetime(dataframe: DataFrame): DataFrame = {
     val datetimeDf = dataframe.withColumn("ts", from_unixtime($"ts"))
     return datetimeDf
+  }
+  def rddAddColGroupid(rdd: RDD[Array[Any]]) = {
+//    rdd.map(arr=>arr.toBuffer.append(1).toString)
+    rdd.map{arr=>
+      val arrBuf = arr.toBuffer
+      val groupid = arrBuf(3) match {
+        case "14E4E6E16E7A" => 1
+        case "14E4E6E1867A" => 1
+        case "14E4E6E17A34" => 2
+        case "14E4E6E172EA" => 2
+        case _ => 0
+      }
+      arrBuf.append(groupid)
+      arrBuf.toArray
+    }
   }
   def main(args: Array[String]): Unit = {
 
