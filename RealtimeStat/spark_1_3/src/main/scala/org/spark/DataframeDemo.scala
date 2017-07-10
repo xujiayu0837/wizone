@@ -73,6 +73,9 @@ object DataframeDemo {
     val sql4 = "SELECT * FROM goData"
     spark.sql(sql3).show(2000, false)
     spark.sql(sql4).show(2000, false)
+
+    println(s"maxMemory: ${Runtime.getRuntime.maxMemory()}")
+    println(s"totalMemory: ${Runtime.getRuntime.totalMemory()}")
 ////    MyUtils.convertTimestampToDatetime(modifyDf).orderBy("groupid", "AP", "ts").show(2000, false)
 //    modifyDf.createOrReplaceTempView("data0")
 //    modifyDf.createOrReplaceTempView("data1")

@@ -21,12 +21,12 @@ import scala.collection.mutable
   */
 object StreamingDfDemo {
   val THRESHOLD = 1800
-  val durations = 5
-  val numCores = 2
-//  val PARQUETPATH = new StringBuilder("/Users/xujiayu/parquet")
-//  val OUIFILENAME = new StringBuilder("/Users/xujiayu/Downloads/oui_new.txt")
-    val PARQUETPATH = new StringBuilder("/home/hadoop/parquet")
-    val OUIFILENAME = new StringBuilder("/home/hadoop/oui_new.txt")
+  val durations = 1
+  val numCores = 4
+  val PARQUETPATH = new StringBuilder("/Users/xujiayu/parquet")
+  val OUIFILENAME = new StringBuilder("/Users/xujiayu/Downloads/oui_new.txt")
+  //  val PARQUETPATH = new StringBuilder("/home/hadoop/parquet")
+  //  val OUIFILENAME = new StringBuilder("/home/hadoop/oui_new.txt")
 
   def stateSpecWordCount(key: String, value: Option[Int], state: State[Int]) = {
     val res = state.getOption().getOrElse(0) + value.getOrElse(0)
@@ -137,8 +137,8 @@ object StreamingDfDemo {
 
       val dataDs = rdd.toDF().repartition(numCores).persist(StorageLevel.MEMORY_AND_DISK_SER)
 //      val filterDs = dataDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*)).filter($"userMacAddr".substr(0, 6).isin(broadcastDs.collect():_*)).groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).orderBy($"userMacAddr", $"AP", $"ts")
-      val filterDs = dataDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*))
-      val meanDs = filterDs.groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi")).coalesce(numCores)
+      val filterDs = dataDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*)).coalesce(numCores)
+      val meanDs = filterDs.groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi"))
 //      val zipDf = filterDs.rdd.zipWithIndex().map(tup=>MyUtils.dataWithId(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), tup._1.getAs[Long]("ts"), tup._1.getAs[String]("AP"))).toDF()
 //      val groupDf = MyUtils.addColGroupid(zipDf)
 //      val modifyDf = MyUtils.modifyColAP(groupDf).persist(StorageLevel.MEMORY_AND_DISK_SER)
@@ -175,7 +175,7 @@ object StreamingDfDemo {
       val trajDs = spark.sql(rssSql)
       println(rssSql)
       println("-"*50+"end"+"-"*50)
-//      trajDs.orderBy("groupid", "userMacAddr", "ts").show(2000, false)
+      trajDs.orderBy("groupid", "userMacAddr", "ts").show(2000, false)
 
 //      val zipTrajDf = peakDs.rdd.zipWithIndex().map(tup=>MyUtils.data(tup._2, tup._1.getAs[String]("userMacAddr"), tup._1.getAs[Double]("rssi"), tup._1.getAs[Long]("ts"), tup._1.getAs[String]("AP"), tup._1.getAs[Int]("groupid"))).toDF().persist(StorageLevel.MEMORY_AND_DISK_SER)
 //      zipTrajDf.createOrReplaceTempView("data10")
@@ -200,9 +200,9 @@ object StreamingDfDemo {
       val sql2 = "SELECT groupid, COUNT(groupid) AS goCount FROM goData GROUP BY groupid"
       val sql3 = "SELECT * FROM comeData"
       val sql4 = "SELECT * FROM goData"
-//      spark.sql(sql3).show(2000, false)
+      spark.sql(sql3).show(2000, false)
 //      spark.sql(sql1).show(false)
-//      spark.sql(sql4).show(2000, false)
+      spark.sql(sql4).show(2000, false)
 //      spark.sql(sql2).show(false)
       println("-"*50+"start"+"-"*50)
       val comeCount = spark.sql(sql1)
@@ -221,7 +221,7 @@ object StreamingDfDemo {
       val count = spark.sql("SELECT groupid, comeCount - goCount AS count FROM count")
       println("SELECT groupid, comeCount - goCount AS count FROM count")
       println("-"*50+"end"+"-"*50)
-//      count.show(2000, false)
+      count.show(2000, false)
       //      val resDf = MyUtils.addColMonTime(count)
       //      resDf.show(false)
       //      resDf.write.mode("append").jdbc("jdbc:mysql://10.103.93.27:3306/test", "realtime_statistic", prop)
@@ -235,7 +235,7 @@ object StreamingDfDemo {
         val resDf = MyUtils.addColMonTime(spark.sql("SELECT groupid, base + count AS statistic FROM res")).persist(StorageLevel.MEMORY_AND_DISK_SER)
         println("SELECT groupid, base + count AS statistic FROM res")
         println("-" * 50 + "end" + "-" * 50)
-//        resDf.show(2000, false)
+        resDf.show(2000, false)
         println(s"count: ${resDf.count()}")
         resDf.write.mode("append").jdbc(new StringBuilder(jdbcMysql).append("?verifyServerCertificate=false&useSSL=true").toString(), "realtime_statistic", prop)
       } catch {
