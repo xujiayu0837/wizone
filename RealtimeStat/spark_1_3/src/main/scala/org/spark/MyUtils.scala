@@ -351,6 +351,15 @@ object MyUtils {
       arrBuf.toArray
     }
   }
+  def rddGetDiff(rdd: RDD[(Any, (Option[Int], Option[Int]))]): RDD[(Any, Int)] = {
+    return rdd.map{tup=>
+      val groupid = tup._1
+      val comeCount = tup._2._1.getOrElse(0)
+      val goCount = tup._2._2.getOrElse(0)
+      val count = comeCount - goCount
+      (groupid, count)
+    }
+  }
   def main(args: Array[String]): Unit = {
 
   }

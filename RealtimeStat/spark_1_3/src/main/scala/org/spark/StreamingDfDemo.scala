@@ -1,8 +1,9 @@
 package org.spark
 
-import java.sql.Timestamp
+import java.sql.{Connection, Timestamp}
 import java.util.Properties
 
+import com.mchange.v2.c3p0.ComboPooledDataSource
 import kafka.serializer.StringDecoder
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkConf
@@ -19,6 +20,37 @@ import scala.collection.mutable
 /**
   * Created by xujiayu on 17/6/6.
   */
+class MysqlPool extends Serializable {
+  private val pool: ComboPooledDataSource = new ComboPooledDataSource(true)
+  try {
+    pool.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/wibupt?verifyServerCertificate=false&useSSL=true")
+    pool.setDriverClass("com.mysql.jdbc.Driver")
+    pool.setUser("root")
+    pool.setPassword("root")
+    pool.setMaxPoolSize(200)
+  } catch {
+    case e: Exception => e.printStackTrace()
+  }
+  def getConnection: Connection = {
+    try {
+      return pool.getConnection
+    } catch {
+      case e: Exception => e.printStackTrace()
+        return null
+    }
+  }
+}
+object MysqlManager {
+  var mysqlManager: MysqlPool = _
+  def getMysqlManager: MysqlPool = {
+    synchronized {
+      if (mysqlManager == null) {
+        mysqlManager = new MysqlPool
+      }
+    }
+    return mysqlManager
+  }
+}
 object StreamingDfDemo {
   val THRESHOLD = 1800
   val durations = 1
@@ -110,18 +142,43 @@ object StreamingDfDemo {
 //      val comeRdd = MyUtils.rddFilterCome(comeGoRdd)
 //      val goRdd = MyUtils.rddFilterGo(comeGoRdd)
 //      val comeCount = comeRdd.groupBy(arr=>arr(4)).map(tup=>(tup._1, tup._2.toList.length))
+//      val goCount = goRdd.groupBy(arr=>arr(4)).map(tup=>(tup._1, tup._2.toList.length))
 //      comeCount.collect().foreach{tup=>
 //        println(s"comeCount: ${tup._1}, ${tup._2}")
 //      }
 //      comeRdd.collect().foreach{arr=>
 //        println(s"come: ${arr.toBuffer}")
 //      }
-//      val goCount = goRdd.groupBy(arr=>arr(4)).map(tup=>(tup._1, tup._2.toList.length))
 //      goCount.collect().foreach{tup=>
 //        println(s"goCount: ${tup._1}, ${tup._2}")
 //      }
 //      goRdd.collect().foreach{arr=>
 //        println(s"go: ${arr.toBuffer}")
+//      }
+//      val joinRdd = comeCount.fullOuterJoin(goCount)
+//      println(s"joinRdd: ${joinRdd.collect().toBuffer}")
+//      val diffRdd = MyUtils.rddGetDiff(joinRdd)
+//      println(s"diffRdd: ${diffRdd.collect().toBuffer}")
+//
+//      if (!diffRdd.isEmpty()) {
+//        diffRdd.foreachPartition{par=>
+//          val conn = MysqlManager.getMysqlManager.getConnection
+////          conn.prepareStatement()
+//          val stmt = conn.createStatement()
+//          try {
+//            conn.setAutoCommit(false)
+//            par.foreach{data=>
+//              val sql = "INSERT INTO realtime_statistic "
+//              stmt.addBatch(sql)
+//            }
+//            conn.commit()
+//          } catch {
+//            case e: Exception => e.printStackTrace()
+//          } finally {
+//            stmt.close()
+//            conn.close()
+//          }
+//        }
 //      }
 
 //      prevNextRdd.collect().foreach{list=>
