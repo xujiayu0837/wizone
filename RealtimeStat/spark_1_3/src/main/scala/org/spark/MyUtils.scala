@@ -252,6 +252,12 @@ object MyUtils {
       }
     }.flatMap(item=>item)
   }
+  def rddAddColMonTime(rdd: RDD[(Any, Int)]): RDD[(Any, Int, Int)] = {
+    return rdd.map{tup=>
+      val monTime = System.currentTimeMillis().toString.substring(0, 10).toInt
+      (tup._1, tup._2, monTime)
+    }
+  }
   def rddFilterColsPrevNext(rdd: RDD[Array[Any]]): RDD[Array[Any]] = {
     return rdd.filter{arr=>
       val rss = arr(1).toString
@@ -358,6 +364,28 @@ object MyUtils {
       val goCount = tup._2._2.getOrElse(0)
       val count = comeCount - goCount
       (groupid, count)
+    }
+  }
+  def rddGetSum(rdd: RDD[(Int, (Option[Int], Option[Int]))]): RDD[(Any, Int)] = {
+    return rdd.map{tup=>
+      val groupid = tup._1
+      val prev = tup._2._1.getOrElse(0)
+      val next = tup._2._2.getOrElse(0)
+      val count = prev + next
+      (groupid, count)
+    }
+  }
+  def rddJoin(comeCount: RDD[(Any, Int)], goCount: RDD[(Any, Int)]) = {
+    val comeArr = comeCount.collect()
+    val goArr = goCount.collect()
+    for (i <- 1 to 20) {
+      comeArr.foreach{tup=>
+        val groupid = tup._1.toString.toInt
+        val count = tup._2
+        if (groupid.equals(i)) {
+          println("*"*20)
+        }
+      }
     }
   }
   def main(args: Array[String]): Unit = {

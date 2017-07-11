@@ -69,6 +69,9 @@ object Test {
     val countDf = spark.sql("SELECT groupid, window, comeCount - goCount AS count FROM count").orderBy("groupid", "window")
     countDf.show(2000, false)
 
+    println(s"maxMemory: ${Runtime.getRuntime.maxMemory()}")
+    println(s"totalMemory: ${Runtime.getRuntime.totalMemory()}")
+
 //    val filterDs = dataset.filter($"AP".isin(MyUtils.groupid16:_*)).coalesce(numCores)
 //    val meanDs = filterDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*)).groupBy("userMacAddr", "ts", "AP").agg(round(mean($"rssi")).alias("rssi")).orderBy("userMacAddr", "AP", "ts").coalesce(numCores)
 //    meanDs.dropDuplicates("userMacAddr", "ts", "AP").coalesce(numCores).createOrReplaceTempView("data")

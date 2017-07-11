@@ -10,7 +10,7 @@ import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions.{lit, mean, round}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.kafka.KafkaUtils
-import org.apache.spark.streaming.{Minutes, StreamingContext}
+import org.apache.spark.streaming.{Minutes, State, StreamingContext}
 
 import scala.collection.mutable.StringBuilder
 
@@ -22,6 +22,15 @@ object StreamingTest {
   val numCores = 4
   val PARQUETPATH = new StringBuilder("/Users/xujiayu/parquet")
 
+  def stateSpecWordCount(key: String, value: Option[Int], state: State[Int]) = {
+    val res = state.getOption().getOrElse(0) + value.getOrElse(0)
+    val getState = state.getOption().getOrElse(0)
+    val getValue = value.getOrElse(0)
+    println(s"getState: $getState")
+    println(s"getValue: $getValue")
+    state.update(res)
+    (key, res)
+  }
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName("StreamingDfDemo").setMaster("local[*]")
     val ssc = new StreamingContext(conf, Minutes(durations))

@@ -1,10 +1,13 @@
 package org.spark
 
+import java.sql.Connection
 import java.util.Properties
 
+import com.mchange.v2.c3p0.ComboPooledDataSource
 import kafka.serializer.StringDecoder
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkConf
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions.{broadcast, explode, mean, round}
@@ -17,6 +20,37 @@ import scala.collection.mutable.StringBuilder
 /**
   * Created by xujiayu on 17/6/15.
   */
+//class MysqlPool extends Serializable {
+//  private val pool: ComboPooledDataSource = new ComboPooledDataSource(true)
+//  try {
+//    pool.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/wibupt?verifyServerCertificate=false&useSSL=true")
+//    pool.setDriverClass("com.mysql.jdbc.Driver")
+//    pool.setUser("root")
+//    pool.setPassword("root")
+//    pool.setMaxPoolSize(200)
+//  } catch {
+//    case e: Exception => e.printStackTrace()
+//  }
+//  def getConnection: Connection = {
+//    try {
+//      return pool.getConnection
+//    } catch {
+//      case e: Exception => e.printStackTrace()
+//        return null
+//    }
+//  }
+//}
+//object MysqlManager {
+//  var mysqlManager: MysqlPool = _
+//  def getMysqlManager: MysqlPool = {
+//    synchronized {
+//      if (mysqlManager == null) {
+//        mysqlManager = new MysqlPool
+//      }
+//    }
+//    return mysqlManager
+//  }
+//}
 object RealtimeStatistic {
   val THRESHOLD = 9273
   val durations = 1
@@ -26,6 +60,117 @@ object RealtimeStatistic {
   //  val PARQUETPATH = new StringBuilder("/home/hadoop/parquet")
   //  val OUIFILENAME = new StringBuilder("/home/hadoop/oui_new.txt")
 
+  def insertDB(rdd: RDD[(Any, Int)]): Unit = {
+    if (!rdd.isEmpty()) {
+      val resRdd = MyUtils.rddAddColMonTime(rdd)
+      resRdd.foreachPartition{par=>
+        val conn = MysqlManager.getMysqlManager.getConnection
+        val sql = "INSERT INTO realtime_statistic SET groupid = ?, statistic = ?, monTime = ?"
+        val pstmt = conn.prepareStatement(sql)
+        try {
+          conn.setAutoCommit(false)
+          par.foreach{tup=>
+            pstmt.setObject(1, tup._1)
+            pstmt.setObject(2, tup._2)
+            pstmt.setObject(3, tup._3)
+            // 如果使用addBatch(), sql语句中就能带"?"参数, 而addBatch(sql), sql语句中不能带"?"参数
+            pstmt.addBatch()
+          }
+          //          pstmt.executeBatch()
+          conn.commit()
+        } catch {
+          case e: Exception => e.printStackTrace()
+        } finally {
+          if (pstmt != null) {
+            pstmt.close()
+          }
+          if (conn != null) {
+            conn.close()
+          }
+        }
+      }
+    }
+  }
+  def rddGetMean(rdd: RDD[Array[String]], blacklistArr: Array[String]): RDD[Array[Any]] = {
+    val filterRdd = rdd.filter(arr=>arr(2).toInt.>(-90)).filter(arr => !blacklistArr.contains(arr(1))).coalesce(numCores)
+    val meanRdd = filterRdd.map(arr=>((arr(1), arr(3), arr(4)), arr(2).toDouble)).mapValues(rss=>(rss, 1)).reduceByKey((tup0, tup1)=>(tup0._1+tup1._1, tup0._2+tup1._2)).mapValues(tup=>tup._1/tup._2).map(tup=>Array(tup._1._1, tup._2.round, tup._1._2, tup._1._3))
+    return meanRdd
+  }
+  // 获取轨迹序列模块
+  def rddGetTraj(meanRdd: RDD[Array[Any]]): RDD[Array[Any]] = {
+    val groupRdd = MyUtils.rddAddColGroupid(meanRdd)
+    val modifyRdd = MyUtils.rddModifyColAP(groupRdd)
+    val peakWindowRdd = modifyRdd.groupBy(arr=>(arr(0), arr(3))).map(tup=>tup._2.toList.sortBy(arr=>(arr(0).toString, arr(3).toString, arr(2).toString)).zipWithIndex)
+    val prevNextRdd = MyUtils.rddAddColsPrevNext(peakWindowRdd)
+    val peakRdd = MyUtils.rddFilterColsPrevNext(prevNextRdd)
+    //    peakRdd.collect().foreach{arr=>
+    //      println(s"peakRdd: ${arr.toBuffer}")
+    //    }
+    val APWindowRdd = peakRdd.groupBy(arr=>(arr(0), arr(1), arr(2))).map(tup=>tup._2.toList.sortBy(arr=>(arr(0).toString, arr(1).toString, arr(2).toString, arr(3).toString)).zipWithIndex)
+    val APRdd = MyUtils.rddFilterColAPPrev(MyUtils.rddAddColAPPrev(APWindowRdd))
+    val rssWindowRdd = APRdd.groupBy(arr=>(arr(0), arr(2))).map(tup=>tup._2.toList.sortBy(arr=>(arr(0).toString, arr(2).toString, arr(1).toString)).zipWithIndex)
+    val trajRdd =  MyUtils.rddFilterColRssNext(MyUtils.rddAddColRssNext(rssWindowRdd))
+    return trajRdd
+  }
+  // 计算净增加人数模块
+  def rddGetComeGo(trajRdd: RDD[Array[Any]]): RDD[(Any, Int)] = {
+    val windowRdd = trajRdd.groupBy(arr=>(arr(4), arr(0))).map(tup=>tup._2.toList.sortBy(arr=>(arr(4).toString, arr(0).toString, arr(2).toString)).zipWithIndex)
+    val comeGoRdd = MyUtils.rddAddColsPrev(windowRdd)
+    val comeRdd = MyUtils.rddFilterCome(comeGoRdd)
+    val goRdd = MyUtils.rddFilterGo(comeGoRdd)
+    val comeCount = comeRdd.groupBy(arr=>arr(4)).map(tup=>(tup._1, tup._2.toList.length))
+    val goCount = goRdd.groupBy(arr=>arr(4)).map(tup=>(tup._1, tup._2.toList.length))
+    comeCount.collect().foreach{tup=>
+      println(s"comeCount: ${tup._1}, ${tup._2}")
+    }
+    comeRdd.collect().foreach{arr=>
+      println(s"come: ${arr.toBuffer}")
+    }
+    goCount.collect().foreach{tup=>
+      println(s"goCount: ${tup._1}, ${tup._2}")
+    }
+    goRdd.collect().foreach{arr=>
+      println(s"go: ${arr.toBuffer}")
+    }
+    val diffRdd = MyUtils.rddGetDiff(comeCount.fullOuterJoin(goCount))
+    return diffRdd
+  }
+  // 获取当前人数
+  def rddSaveRes(diffRdd: RDD[(Any, Int)]): Unit = {
+    val conn = MysqlManager.getMysqlManager.getConnection
+    val sql = "SELECT realtime_statistic.groupid AS groupid, realtime_statistic.statistic AS base FROM realtime_statistic, (SELECT groupid, MAX(monTime) max FROM realtime_statistic GROUP BY groupid) data20 WHERE data20.max > ? AND realtime_statistic.monTime = data20.max AND realtime_statistic.groupid = data20.groupid"
+    val pstmt = conn.prepareStatement(sql)
+    val baseArr = Array((0, 0))
+    val baseBuf = baseArr.toBuffer
+    try {
+      pstmt.setObject(1, 1400000000)
+      val rs = pstmt.executeQuery()
+      if (!rs.isBeforeFirst) {
+        insertDB(diffRdd)
+      }
+      else {
+        while (rs.next()) {
+          val groupid = rs.getInt("groupid")
+          val base = rs.getInt("base")
+          baseBuf.append((groupid, base))
+          println(s"groupid: $groupid, base: $base")
+        }
+        val baseRdd = diffRdd.sparkContext.parallelize(baseBuf).filter(_._1 != 0)
+        val countRdd = MyUtils.rddGetSum(diffRdd.map(tup=>(tup._1.toString.toInt, tup._2)).fullOuterJoin(baseRdd))
+        println(s"countRdd: ${countRdd.collect().toBuffer}")
+        insertDB(countRdd)
+      }
+    } catch {
+      case e: Exception => e.printStackTrace()
+    } finally {
+      if (pstmt != null) {
+        pstmt.close()
+      }
+      if (conn != null) {
+        conn.close()
+      }
+    }
+  }
   def stateSpec(key: String, value: Option[MyUtils.dataWithId], state: State[Seq[MyUtils.dataWithId]]) = {
     val getState = state.getOption().getOrElse(Seq[MyUtils.dataWithId]())
     val getValue = value.get
@@ -63,60 +208,15 @@ object RealtimeStatistic {
     val pairDstream = dataStream.map(item=>item.AP->item).mapWithState(StateSpec.function(stateSpec _).timeout(Seconds(9273)))
     //    val pairDstream = dataStream.transform(rdd=>rdd.zipWithIndex().map(tup=>MyUtils.dataWithDt(tup._2, tup._1.userMacAddr, tup._1.rssi, new Timestamp(tup._1.ts * 1000L), tup._1.AP))).map(item=>item->item).mapWithState(StateSpec.function(stateSpec _))
     //    pairDstream.print()
-    dataStream.foreachRDD{rdd=>
-      val dataDs = rdd.toDF().repartition(numCores).persist(StorageLevel.MEMORY_AND_DISK_SER)
-      val filterDs = dataDs.filter($"rssi".gt(-90)).filter(!$"userMacAddr".isin(blacklistDs.collect():_*)).coalesce(numCores)
-      val meanDs = filterDs.groupBy($"userMacAddr", $"ts", $"AP").agg(round(mean($"rssi")).alias("rssi"))
-      // 获取轨迹序列模块
-      val peakWindow = Window.partitionBy("userMacAddr", "AP").orderBy("userMacAddr", "AP", "ts")
-      val prevNextDf = MyUtils.addColsPrevNext(meanDs, peakWindow)
-      val groupDf = MyUtils.addColGroupid(prevNextDf)
-      val modifyDf = MyUtils.modifyColAP(groupDf)
-      modifyDf.createOrReplaceTempView("data0")
-      //      val countSql = "SELECT data0.userMacAddr, data0.ts, data0.rssi, data0.AP, data0.groupid, data40.count FROM data0, (SELECT userMacAddr, ts, rssi, COUNT(*) AS count FROM data0 GROUP BY userMacAddr, ts, rssi) data40 WHERE data0.userMacAddr = data40.userMacAddr AND data0.ts = data40.ts AND data0.rssi = data40.rssi AND data40.count > 1"
-      //      spark.sql(countSql).orderBy("userMacAddr", "ts", "rssi").show(2000, false)
-      val peakSql = "SELECT userMacAddr, ts, AP, groupid, rssi FROM data0 WHERE (rssi > rssiPrev AND rssi > rssiNext) OR (rssi > rssiPrev AND rssiNext IS NULL) OR (rssiPrev IS NULL AND rssi > rssiNext)"
-      
-      val peakDs = spark.sql(peakSql)      
-      val APWindow = Window.partitionBy("userMacAddr", "ts", "rssi").orderBy("userMacAddr", "ts", "rssi", "AP")
-      MyUtils.addColAPPrev(peakDs, APWindow).createOrReplaceTempView("data30")
-      val APSql = "SELECT userMacAddr, ts, AP, groupid, rssi FROM data30 WHERE apPrev IS NULL"
-      
-      val APDs = spark.sql(APSql)      
-      val rssWindow = Window.partitionBy("userMacAddr", "ts").orderBy("userMacAddr", "ts", "rssi")
-      MyUtils.addColRssNext(APDs, rssWindow).createOrReplaceTempView("data31")
-      val rssSql = "SELECT userMacAddr, ts, AP, groupid, rssi FROM data31 WHERE rssNext IS NULL"
-      val trajDs = spark.sql(rssSql)
-
-      // 获取进出大楼人数
-      val window = Window.partitionBy("groupid", "userMacAddr").orderBy("groupid", "userMacAddr", "ts")
-      MyUtils.addColsPrev(trajDs, window).createOrReplaceTempView("data10")
-      val comeSql = "SELECT userMacAddr, tsPrev, apPrev, rssiPrev, ts, AP, rssi, groupid FROM data10 WHERE AP = 'inside' AND apPrev = 'outside'"
-      val goSql = "SELECT userMacAddr, tsPrev, apPrev, rssiPrev, ts, AP, rssi, groupid FROM data10 WHERE AP = 'outside' AND apPrev = 'inside'"
-      
-      spark.sql(comeSql).createOrReplaceTempView("comeData")
-      spark.sql(goSql).createOrReplaceTempView("goData")
-      val sql1 = "SELECT groupid, COUNT(groupid) AS comeCount FROM comeData GROUP BY groupid"
-      val sql2 = "SELECT groupid, COUNT(groupid) AS goCount FROM goData GROUP BY groupid"
-      val comeCount = spark.sql(sql1)
-      val goCount = spark.sql(sql2)
-      val comeGoDs = comeCount.join(goCount, Seq("groupid"), "fullouter")
-      val newJoinDf = MyUtils.modifyColCount(comeGoDs)
-      newJoinDf.createOrReplaceTempView("count")
-      
-      val count = spark.sql("SELECT groupid, comeCount - goCount AS count FROM count")
-      val tb0 = "(SELECT realtime_statistic.groupid, realtime_statistic.statistic AS base FROM realtime_statistic, (SELECT groupid, MAX(monTime) max FROM realtime_statistic GROUP BY groupid) data20 WHERE realtime_statistic.monTime = data20.max AND realtime_statistic.groupid = data20.groupid ORDER BY realtime_statistic.groupid) data21"
-      try {
-        val base = spark.read.jdbc(jdbcMysql, tb0, prop)
-        //      base.show(2000, false)
-        val joinDs = base.join(count, Seq("groupid"), "fullouter")
-        MyUtils.modifyColBase(joinDs).createOrReplaceTempView("res")
-        val resDf = MyUtils.addColMonTime(spark.sql("SELECT groupid, base + count AS statistic FROM res")).persist(StorageLevel.MEMORY_AND_DISK_SER)
-        resDf.show(2000, false)
-//        resDf.write.mode("append").jdbc(new StringBuilder(jdbcMysql).append("?verifyServerCertificate=false&useSSL=true").toString(), "realtime_statistic", prop)
-      } catch {
-        case e: Exception => e.printStackTrace()
+    lines.foreachRDD{rdd=>
+      val meanRdd = rddGetMean(rdd, blacklistArr)
+      val trajRdd = rddGetTraj(meanRdd)
+      trajRdd.collect().foreach{arr=>
+        println(s"trajRdd: ${arr.toBuffer}")
       }
+      val diffRdd = rddGetComeGo(trajRdd)
+      println(s"diffRdd: ${diffRdd.collect().toBuffer}")
+      rddSaveRes(diffRdd)
     }
 
     ssc.start()
